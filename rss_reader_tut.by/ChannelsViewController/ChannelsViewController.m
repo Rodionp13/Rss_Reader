@@ -22,7 +22,6 @@ static NSString *const kCellId = @"myCell";
 @property(strong, nonatomic) HTMLParser *parser;
 
 @property(strong, nonatomic) NSURL *destinationURL;
-//@property (weak, nonatomic) IBOutlet UITableView *myTable;
 @property (strong, nonatomic) UITableView *myTable;
 
 @end
@@ -85,16 +84,40 @@ static NSString *const kCellId = @"myCell";
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    Channel *channel = [self.channels objectAtIndex:indexPath.row];
+    Channel *channel = [self.channels objectAtIndex:indexPath.section][indexPath.row];
+    NSLog(@"Channel COUNT %lu", [self.channels[indexPath.section] count]);
+    NSLog(@"Ind Path %@", indexPath);
+    
+    NSLog(@"%@", [[self.channels objectAtIndex:indexPath.section] class]);
     NSLog(@"%@", channel);
-    if(channel.url != nil) {
-         NSString *stringUrl = channel.url;
-    }
+    NSString *strUrl = channel.url;
     ArticlesViewController *articleVC = [[ArticlesViewController alloc] init];
-//    if(stringUrl != nil) {
-//    [articleVC setStringUrl:stringUrl];
-//    }
+    [articleVC setStringUrl:strUrl];
     [self.navigationController pushViewController:articleVC animated:YES];
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 40)];
+    [headerView setBackgroundColor:UIColor.grayColor];
+    [tableView setTableHeaderView:headerView];
+    UILabel *lbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 40)];
+    [lbl setBackgroundColor:UIColor.whiteColor];
+    lbl.text = self.headers[section];
+    return lbl;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 40;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    return [[UILabel alloc] init];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    return 40;
 }
 
 
