@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ChannelsViewController.h"
 
-@interface ArticlesViewController : UIViewController <UITableViewDataSource>
+@interface ArticlesViewController : UIViewController <NSXMLParserDelegate>
 @property(strong, nonatomic) NSString *stringUrl;
+
 @end

@@ -8,6 +8,7 @@
 
 #import "ChannelsViewController.h"
 #import "ArticlesViewController.h"
+#import "AppDelegate.h"
 #import "Channel.h"
 #import "FirstCell.h"
 #import "HTMLParser.h"
@@ -55,6 +56,7 @@ static NSString *const kCellId = @"myCell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    NSLog(@"HELLOWWWWWWWWWW");
     self.parser = [[HTMLParser alloc] init];
     [self executeGetQuery: @"https://news.tut.by/rss.html"];
     
@@ -156,7 +158,7 @@ static NSString *const kCellId = @"myCell";
     
     NSError *err;
     [fileManager copyItemAtURL:location toURL:destinationUrl error:&err];
-    [self printError:err withDescr:@"Failed to copy item"];
+    [AppDelegate printError:err withDescr:@"Failed to copy item"];
     NSLog(@"%@", location);
     NSLog(@"%@", destinationUrl);
     NSData *data = [[NSData alloc] initWithContentsOfURL:destinationUrl];
@@ -166,17 +168,16 @@ static NSString *const kCellId = @"myCell";
     
     NSError *removeErr;
     [fileManager removeItemAtURL:destinationUrl error:&removeErr];
-    [self printError:removeErr withDescr:@"Failed to remove item"];
+    [AppDelegate printError:removeErr withDescr:@"Failed to remove item"];
     
     return resStr;
 }
 
-- (void)printError:(NSError*)error withDescr:(NSString *)desc {
-    if(error != nil) {
-        NSLog(@"%@\n%@\n%@", desc, error, [error localizedDescription]);
-        
-    } else {NSLog(@"Success");}
-}
+//+ (void)printError:(NSError*)error withDescr:(NSString *)descr {
+//    if(error != nil) {
+//        NSLog(@"%@\n%@\n%@", descr, error, [error localizedDescription]);
+//    } else {NSLog(@"Success");}
+//}
 
 
 
