@@ -8,8 +8,18 @@
 
 #import <UIKit/UIKit.h>
 #import "ChannelsViewController.h"
+#import "AppDelegate.h"
+#import "Article.h"
 
-@interface ArticlesViewController : UIViewController <NSXMLParserDelegate>
+static NSString *const kItem = @"item";
+static NSString *const kTitle = @"title";
+static NSString *const kLink = @"link";
+static NSString *const kDescription = @"description";
+static NSString *const kMediaContent = @"media:content";
+static NSString *const kPubDate = @"pubDate";
+static NSString *const kVideoContent = @"video";
+
+@interface ArticlesViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,NSXMLParserDelegate>
 @property(strong, nonatomic) NSString *stringUrl;
 
 @end

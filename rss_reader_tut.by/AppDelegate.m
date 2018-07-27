@@ -78,7 +78,7 @@
         
         complition(destinationUrl);
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"OKAY");
+            NSLog(@"OKAY frrom download ASUNC_GET_MAIN - can reload Data here");
         });
     }];
     [downloadTask resume];

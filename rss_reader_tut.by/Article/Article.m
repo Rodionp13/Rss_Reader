@@ -10,11 +10,12 @@
 
 @implementation Article
 
-- (id)initWithTitle:(NSString *)title date:(NSString *)date description:(NSString *)description link:(NSString *)link images:(NSMutableDictionary *)images andVideoContent:(NSMutableDictionary *)videoContent {
+- (id)initWithTitle:(NSString *)title iconUrlStr:(NSString *)iconUrlString date:(NSString *)date description:(NSString *)description link:(NSString *)link images:(NSMutableArray *)images andVideoContent:(NSMutableArray *)videoContent {
     self = [super init];
     
     if(self) {
         _title = title;
+        _iconUrl = [NSURL URLWithString:iconUrlString];
         _date = date;
         _articleDescr = description;
         _articleLink = [NSURL URLWithString:link];
@@ -25,7 +26,7 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"ARTICLE:\n%@\n%@\n%@\n%@\n%@\n%@", self.title,self.date,self.articleDescr, self.articleDescr, self.imageContentURLsAndNames, self.videoContentURLsAndNames];
+    return [NSString stringWithFormat:@"ARTICLE:\n%@\n%@\n%@\n%@\n%@\n%@\n%@", self.title,self.iconUrl,self.date,self.articleDescr, self.articleDescr, self.imageContentURLsAndNames, self.videoContentURLsAndNames];
 }
 
 @end

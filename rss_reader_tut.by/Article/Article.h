@@ -10,12 +10,13 @@
 
 @interface Article : NSObject
 @property(strong, nonatomic) NSString *title;
+@property(strong, nonatomic) NSURL *iconUrl;
 @property(strong, nonatomic) NSString *date;
 @property(strong, nonatomic) NSString *articleDescr;
 @property(strong, nonatomic) NSURL *articleLink;
-@property(strong, nonatomic) NSMutableDictionary *imageContentURLsAndNames;
-@property(strong, nonatomic) NSMutableDictionary *videoContentURLsAndNames;
+@property(strong, nonatomic) NSMutableArray *imageContentURLsAndNames;
+@property(strong, nonatomic) NSMutableArray *videoContentURLsAndNames;
 
-- (id)initWithTitle:(NSString *)title date:(NSString *)date description:(NSString *)description link:(NSString *)link images:(NSMutableDictionary *)images andVideoContent:(NSMutableDictionary *)videoContent;
+- (id)initWithTitle:(NSString *)title iconUrlStr:(NSString *)iconUrlString date:(NSString *)date description:(NSString *)description link:(NSString *)link images:(NSMutableArray *)images andVideoContent:(NSMutableArray *)videoContent;
 
 @end

@@ -7,15 +7,9 @@
 //
 
 #import "ArticlesViewController.h"
-#import "AppDelegate.h"
+#import "ArticlesViewController+Parsing_Methods.h"
 
-static NSString *const kItem = @"item";
-static NSString *const kTitle = @"title";
-static NSString *const kLink = @"link";
-static NSString *const kDescription = @"description";
-static NSString *const kMediaContent = @"media:content";
-static NSString *const kPubDate = @"pubDate";
-static NSString *const kVideoContent = @"video";
+static NSString *const kCellId = @"myCell";
 
 static NSString *const kMediaContentType = @"type";
 static NSString *const kMediaTypeJpeg = @"jpeg";
@@ -36,10 +30,10 @@ static NSString *const kMediaTypeMp4 = @"mp4";
 @property(strong, nonatomic) NSMutableString *foundValue;
 @property(strong, nonatomic) NSString *currentString;
 
-@property(strong, nonatomic) NSMutableArray *testArr;
-@property(nonatomic) int count;
-@property(nonatomic) int start;
-@property(nonatomic) int end;
+//@property(strong, nonatomic) NSMutableArray *testArr;
+//@property(nonatomic) int count;
+//@property(nonatomic) int start;
+//@property(nonatomic) int end;
 @end
 
 @implementation ArticlesViewController
@@ -47,17 +41,41 @@ static NSString *const kMediaTypeMp4 = @"mp4";
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.articles = [[NSMutableArray alloc] init];
-    self.tags = @[kTitle, kLink, kDescription, kPubDate];
-    self.foundValue = [[NSMutableString alloc] init];
-    self.arrOfImageContent = [[NSMutableArray alloc] init];
-    self.arrOfVideoContent = [[NSMutableArray alloc] init];
     
-    self.testArr = [NSMutableArray array];
-    self.count = 0;
-    self.start = 0;
-    self.end = 0;
+    //tableview initialization
+    self.tableView = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStylePlain];
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:kCellId];
+    [self.view addSubview:self.tableView];
+    
+    //fetching data for articles
     [self download];
 }
+
+#pragma mark - methods for table view
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.articles.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellId forIndexPath:indexPath];
+    if(cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:kCellId];
+    }
+    
+    Article *article = [self.articles objectAtIndex:indexPath.row];
+    cell.textLabel.text = article.title;
+    cell.detailTextLabel.text = article.articleDescr;
+    
+    return cell;
+}
+
+
+
+
+#pragma mark - method for downloading xml file to the Document directory
 
 - (void)download {
     NSURL *myUrl = [NSURL URLWithString:self.stringUrl];
@@ -72,21 +90,17 @@ static NSString *const kMediaTypeMp4 = @"mp4";
                 NSLog(@"Fail");
             }
             NSLog(@"%lu", self.articles.count);
-            for(NSDictionary *dict in self.articles) {
-                NSLog(@"DICT");
-                for(NSString *key in dict.allKeys) {
-                NSLog(@"%@", [dict valueForKey:key]);
-                }
-            }
-            for(NSString *i in self.testArr) {
-                NSLog(@"TEST %@", i);
-            }
         }
     }];
 }
 
+#pragma mark - methods for XML-parsing
 
 - (void)parserDidStartDocument:(NSXMLParser *)parser {
+    self.tags = @[kTitle, kLink, kDescription, kPubDate];
+    self.foundValue = [[NSMutableString alloc] init];
+    self.arrOfImageContent = [[NSMutableArray alloc] init];
+    self.arrOfVideoContent = [[NSMutableArray alloc] init];
     NSLog(@"parserDidStartDocument");
 }
 
@@ -96,7 +110,7 @@ static NSString *const kMediaTypeMp4 = @"mp4";
         self.tempDict = [[NSMutableDictionary alloc] init];
     }
     
-    if([elementName isEqualToString:kMediaContent] && self.inItem == YES) {
+    if([elementName containsString:kMediaContent] && self.inItem == YES) {
         NSString *mediaContentType = [attributeDict valueForKey:kMediaContentType];
         NSString *mediaContentUrl = [attributeDict valueForKey:@"url"];
         if([mediaContentType containsString:kMediaTypeJpeg] || [mediaContentType containsString:kMediaTypePng]) {
@@ -137,6 +151,7 @@ static NSString *const kMediaTypeMp4 = @"mp4";
     } else {
         for(NSString *tag in self.tags) {
             if([elementName isEqualToString:tag]) {
+                
                 NSString *strToAdd = [[NSString alloc] initWithString:self.foundValue];
                 [self.tempDict setValue:strToAdd forKey:elementName];
             }
@@ -146,9 +161,19 @@ static NSString *const kMediaTypeMp4 = @"mp4";
     [self.foundValue setString:@""];
 }
 
+
 - (void)parserDidEndDocument:(NSXMLParser *)parser {
+    
+    NSArray *articlesObjects = [self parseArticlesDataIntoArticlesObjects:self.articles];
+    [self setArticles:articlesObjects.mutableCopy];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
+    });
     NSLog(@"parserDidEndDocument");
 }
+
+
 
 
 @end
