@@ -9,14 +9,19 @@
 #import "ArticlesViewController.h"
 #import "AppDelegate.h"
 
-typedef  void(^myBlock)(NSData* xmlFile);
-
 static NSString *const kItem = @"item";
 static NSString *const kTitle = @"title";
 static NSString *const kLink = @"link";
 static NSString *const kDescription = @"description";
 static NSString *const kMediaContent = @"media:content";
 static NSString *const kPubDate = @"pubDate";
+static NSString *const kVideoContent = @"video";
+
+static NSString *const kMediaContentType = @"type";
+static NSString *const kMediaTypeJpeg = @"jpeg";
+static NSString *const kMediaTypePng = @"png";
+static NSString *const kMediaTypeMp4 = @"mp4";
+
 
 @interface ArticlesViewController ()
 @property(strong, nonatomic) UITableView *tableView;
@@ -24,11 +29,17 @@ static NSString *const kPubDate = @"pubDate";
 
 @property(strong, nonatomic) NSXMLParser *xmlParser;
 @property(strong, nonatomic) NSArray *tags;
-@property(strong, nonatomic) NSMutableArray *arrOfMediaContent;
+@property(strong, nonatomic) NSMutableArray *arrOfImageContent;
+@property(strong, nonatomic) NSMutableArray *arrOfVideoContent;
 @property(assign, nonatomic) BOOL inItem;
 @property(strong, nonatomic) NSMutableDictionary *tempDict;
 @property(strong, nonatomic) NSMutableString *foundValue;
 @property(strong, nonatomic) NSString *currentString;
+
+@property(strong, nonatomic) NSMutableArray *testArr;
+@property(nonatomic) int count;
+@property(nonatomic) int start;
+@property(nonatomic) int end;
 @end
 
 @implementation ArticlesViewController
@@ -38,7 +49,13 @@ static NSString *const kPubDate = @"pubDate";
     self.articles = [[NSMutableArray alloc] init];
     self.tags = @[kTitle, kLink, kDescription, kPubDate];
     self.foundValue = [[NSMutableString alloc] init];
-    self.arrOfMediaContent = [[NSMutableArray alloc] init];
+    self.arrOfImageContent = [[NSMutableArray alloc] init];
+    self.arrOfVideoContent = [[NSMutableArray alloc] init];
+    
+    self.testArr = [NSMutableArray array];
+    self.count = 0;
+    self.start = 0;
+    self.end = 0;
     [self download];
 }
 
@@ -61,6 +78,9 @@ static NSString *const kPubDate = @"pubDate";
                 NSLog(@"%@", [dict valueForKey:key]);
                 }
             }
+            for(NSString *i in self.testArr) {
+                NSLog(@"TEST %@", i);
+            }
         }
     }];
 }
@@ -77,9 +97,14 @@ static NSString *const kPubDate = @"pubDate";
     }
     
     if([elementName isEqualToString:kMediaContent] && self.inItem == YES) {
-        NSString *mediaContent = [attributeDict valueForKey:@"url"];
-        [self.arrOfMediaContent addObject:mediaContent];
-        NSLog(@"%@", attributeDict);
+        NSString *mediaContentType = [attributeDict valueForKey:kMediaContentType];
+        NSString *mediaContentUrl = [attributeDict valueForKey:@"url"];
+        if([mediaContentType containsString:kMediaTypeJpeg] || [mediaContentType containsString:kMediaTypePng]) {
+        [self.arrOfImageContent addObject:mediaContentUrl];
+        }
+        else if([mediaContentType containsString:kMediaTypeMp4]) {
+            [self.arrOfVideoContent addObject:mediaContentUrl];
+        }
     }
     
     self.currentString = elementName;
@@ -92,21 +117,22 @@ static NSString *const kPubDate = @"pubDate";
             NSString *trimmingStr = [string stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\t\n"]];
                 [self.foundValue appendString:trimmingStr];
         }
-//    if([self.currentString isEqualToString:kTitle] || [self.currentString isEqualToString:kLink]) {
-//        if(![string isEqualToString:@"\n"]) {
-//        [self.foundValue appendString:string];
-//        }
     }
     NSLog(@"foundCharacters ---> %@", string);
 }
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
     if([elementName isEqualToString:kItem]) {
-        NSArray *arrOfMediaContent = [[NSArray alloc] initWithArray:[self.arrOfMediaContent copy]];
-        [self.tempDict setValue:arrOfMediaContent forKey:kMediaContent];
+        NSArray *arrOfImageContent = [[NSArray alloc] initWithArray:[self.arrOfImageContent copy]];
+        NSArray *arrOfVideoContent = [[NSArray alloc] initWithArray:[self.arrOfVideoContent copy]];
+        [self.tempDict setValue:arrOfImageContent forKey:kMediaContent];
+        [self.tempDict setValue:arrOfVideoContent forKey:kVideoContent];
+        
         NSDictionary *dictToAdd = [[NSDictionary alloc] initWithDictionary:self.tempDict.copy];
         [self.articles addObject:dictToAdd];
-        [self.arrOfMediaContent removeAllObjects];
+        
+        [self.arrOfImageContent removeAllObjects];
+        [self.arrOfVideoContent removeAllObjects];
         self.inItem = NO;
     } else {
         for(NSString *tag in self.tags) {
@@ -116,16 +142,6 @@ static NSString *const kPubDate = @"pubDate";
             }
         }
     }
-//    if([elementName isEqualToString:kItem]) {
-//        NSDictionary *dictToAdd = [[NSDictionary alloc] initWithDictionary:self.tempDict.copy];
-//        [self.articles addObject:dictToAdd];
-//    } else if([elementName isEqualToString:kTitle]) {
-//        NSString *str1 = [[NSString alloc] initWithString:self.foundValue];
-//        [self.tempDict setValue:str1 forKey:elementName];
-//    } else if([elementName isEqualToString:kLink]) {
-//        NSString *str2 = [[NSString alloc] initWithString:self.foundValue];
-//        [self.tempDict setValue:str2 forKey:elementName];
-//    }
     NSLog(@"didEndElement ---> %@", elementName);
     [self.foundValue setString:@""];
 }
