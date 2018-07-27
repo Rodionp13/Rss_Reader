@@ -29,9 +29,9 @@
 
 - (void) configureCellImage {
     self.myImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-        [self.myImageView.layer setBorderWidth:5];
-        [self.myImageView.layer setBorderColor:UIColor.blueColor.CGColor];
-        [self.myImageView.layer setCornerRadius:15];
+    
+    [self.myImageView setImage:[UIImage imageNamed:@"rss"]];
+    [self.myImageView setClipsToBounds:YES];
     
     [self addSubview:self.myImageView];
 }

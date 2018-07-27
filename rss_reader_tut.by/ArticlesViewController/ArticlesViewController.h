@@ -10,6 +10,8 @@
 #import "ChannelsViewController.h"
 #import "AppDelegate.h"
 #import "Article.h"
+#import "ArticleCell.h"
+#import "FirstCell.h"
 
 static NSString *const kItem = @"item";
 static NSString *const kTitle = @"title";

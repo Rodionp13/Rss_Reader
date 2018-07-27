@@ -13,5 +13,4 @@
 @property(strong, nonatomic) UIImageView *myImageView;
 
 - (void) configureCellWithTitleText:(NSString *)textLabel;
-- (void)deleteAll;
 @end

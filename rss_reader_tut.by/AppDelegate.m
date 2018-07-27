@@ -77,9 +77,6 @@
         [fm copyItemAtURL:location toURL:destinationUrl error:nil];
         
         complition(destinationUrl);
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"OKAY frrom download ASUNC_GET_MAIN - can reload Data here");
-        });
     }];
     [downloadTask resume];
 }

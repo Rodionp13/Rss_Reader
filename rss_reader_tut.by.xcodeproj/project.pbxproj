@@ -21,6 +21,7 @@
 		3D03B22321089B2F005F1029 /* FirstCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D03B21D21089B2E005F1029 /* FirstCell.m */; };
 		3D03B22421089B2F005F1029 /* Channel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D03B22121089B2F005F1029 /* Channel.m */; };
 		3D72CEC8210B2DD70044C0D5 /* ArticlesViewController+Parsing_Methods.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D72CEC7210B2DD70044C0D5 /* ArticlesViewController+Parsing_Methods.m */; };
+		3D72CECE210B50230044C0D5 /* ArticleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D72CECD210B50230044C0D5 /* ArticleCell.m */; };
 		3D99E6722108D462008E3BA1 /* ArticlesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D99E6712108D462008E3BA1 /* ArticlesViewController.m */; };
 		CEF4C404210A868F007BA9DA /* Article.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF4C403210A868F007BA9DA /* Article.m */; };
 /* End PBXBuildFile section */
@@ -69,6 +70,8 @@
 		3D03B22121089B2F005F1029 /* Channel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Channel.m; sourceTree = "<group>"; };
 		3D72CEC6210B2DD70044C0D5 /* ArticlesViewController+Parsing_Methods.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ArticlesViewController+Parsing_Methods.h"; sourceTree = "<group>"; };
 		3D72CEC7210B2DD70044C0D5 /* ArticlesViewController+Parsing_Methods.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ArticlesViewController+Parsing_Methods.m"; sourceTree = "<group>"; };
+		3D72CECC210B50230044C0D5 /* ArticleCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ArticleCell.h; sourceTree = "<group>"; };
+		3D72CECD210B50230044C0D5 /* ArticleCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ArticleCell.m; sourceTree = "<group>"; };
 		3D99E6702108D462008E3BA1 /* ArticlesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ArticlesViewController.h; sourceTree = "<group>"; };
 		3D99E6712108D462008E3BA1 /* ArticlesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ArticlesViewController.m; sourceTree = "<group>"; };
 		CEF4C402210A868F007BA9DA /* Article.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Article.h; sourceTree = "<group>"; };
@@ -173,6 +176,8 @@
 			children = (
 				3D99E6702108D462008E3BA1 /* ArticlesViewController.h */,
 				3D99E6712108D462008E3BA1 /* ArticlesViewController.m */,
+				3D72CECC210B50230044C0D5 /* ArticleCell.h */,
+				3D72CECD210B50230044C0D5 /* ArticleCell.m */,
 				3D72CEC6210B2DD70044C0D5 /* ArticlesViewController+Parsing_Methods.h */,
 				3D72CEC7210B2DD70044C0D5 /* ArticlesViewController+Parsing_Methods.m */,
 			);
@@ -349,6 +354,7 @@
 			files = (
 				3D03B1EF21089ACC005F1029 /* rss_reader_tut_by.xcdatamodeld in Sources */,
 				3D99E6722108D462008E3BA1 /* ArticlesViewController.m in Sources */,
+				3D72CECE210B50230044C0D5 /* ArticleCell.m in Sources */,
 				CEF4C404210A868F007BA9DA /* Article.m in Sources */,
 				3D72CEC8210B2DD70044C0D5 /* ArticlesViewController+Parsing_Methods.m in Sources */,
 				3D03B22421089B2F005F1029 /* Channel.m in Sources */,
@@ -528,7 +534,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7L98UN474A;
 				INFOPLIST_FILE = rss_reader_tut.by/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -546,7 +552,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7L98UN474A;
 				INFOPLIST_FILE = rss_reader_tut.by/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

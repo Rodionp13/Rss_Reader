@@ -15,14 +15,17 @@
     for(int i = 0; i < fetchedDataForArticles.count; i++) {
         NSDictionary *articleObj = [fetchedDataForArticles objectAtIndex:i];
         NSDictionary *dictWithIconUrlAndArtDescription = [self parseStringFromDescriptionTag:[articleObj valueForKey:kDescription]];
-        Article *article = [[Article alloc] initWithTitle:[articleObj valueForKey:kTitle] iconUrlStr:[dictWithIconUrlAndArtDescription valueForKey:@"url"] date:[articleObj valueForKey:kPubDate] description:[dictWithIconUrlAndArtDescription valueForKey:@"shortDescription"] link:[articleObj valueForKey:kLink] images:[articleObj valueForKey:kMediaContent] andVideoContent:[articleObj valueForKey:kVideoContent]];
+        NSURL *urlForIconImage = [NSURL URLWithString:[dictWithIconUrlAndArtDescription valueForKey:@"url"]];
+        //Initialization of artilce instance
+        Article *article = [[Article alloc] initWithTitle:[articleObj valueForKey:kTitle] iconUrlStr:[dictWithIconUrlAndArtDescription valueForKey:@"url"] iconPathComponent:[urlForIconImage lastPathComponent] date:[articleObj valueForKey:kPubDate] description:[dictWithIconUrlAndArtDescription valueForKey:@"shortDescription"] link:[articleObj valueForKey:kLink] images:[articleObj valueForKey:kMediaContent] andVideoContent:[articleObj valueForKey:kVideoContent]];
+//        Article *art = [[Article alloc] init];
         
         [mutArticlse addObject:article];
     }
     return mutArticlse.copy;
 }
 
-
+//take url of article icon and article description (parse <description></> tag)
 - (NSDictionary *)parseStringFromDescriptionTag:(NSString *)strToParse {
     NSRange r = NSMakeRange(0, 0);
     NSArray *strings = [strToParse componentsSeparatedByString:@"\""];
@@ -34,7 +37,7 @@
             for(int ch = 0; ch < string.length; ch++) {
                 if([string characterAtIndex:ch] == '>') {
                     r.location = ch+1;
-                } else if([string characterAtIndex:ch] == '<') {
+                } else if([string characterAtIndex:ch] == '<'|| [string characterAtIndex:ch] == ';') {
                     int end = ch;
                     int locate = [NSNumber numberWithUnsignedInteger:r.location].intValue;
                     r.length = [NSNumber numberWithInt:end - locate].unsignedIntegerValue;
