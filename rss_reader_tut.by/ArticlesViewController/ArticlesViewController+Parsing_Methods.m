@@ -10,19 +10,68 @@
 
 @implementation ArticlesViewController (Parsing_Methods)
 
-- (NSArray *)parseArticlesDataIntoArticlesObjects:(NSMutableArray *)fetchedDataForArticles {
+- (NSArray *)parseArticlesDataIntoArticlesObjects:(NSMutableArray *)fetchedDataForArticles tableView:(UITableView*)tableView {
     NSMutableArray *mutArticlse = [NSMutableArray array];
     for(int i = 0; i < fetchedDataForArticles.count; i++) {
         NSDictionary *articleObj = [fetchedDataForArticles objectAtIndex:i];
         NSDictionary *dictWithIconUrlAndArtDescription = [self parseStringFromDescriptionTag:[articleObj valueForKey:kDescription]];
-        NSURL *urlForIconImage = [NSURL URLWithString:[dictWithIconUrlAndArtDescription valueForKey:@"url"]];
+        NSString *strUrl = [dictWithIconUrlAndArtDescription valueForKey:@"url"];
+        NSString *artDescription = [dictWithIconUrlAndArtDescription valueForKey:@"shortDescription"];
+        if(strUrl == nil) {
+            strUrl = @"";
+        } else if(artDescription == nil) {
+            artDescription = @"NO Description";
+        } else if(strUrl == nil && artDescription == nil) {
+            strUrl = @""; artDescription = @"NO Description";
+        }
+        
         //Initialization of artilce instance
-        Article *article = [[Article alloc] initWithTitle:[articleObj valueForKey:kTitle] iconUrlStr:[dictWithIconUrlAndArtDescription valueForKey:@"url"] iconPathComponent:[urlForIconImage lastPathComponent] date:[articleObj valueForKey:kPubDate] description:[dictWithIconUrlAndArtDescription valueForKey:@"shortDescription"] link:[articleObj valueForKey:kLink] images:[articleObj valueForKey:kMediaContent] andVideoContent:[articleObj valueForKey:kVideoContent]];
-//        Article *art = [[Article alloc] init];
+        
+        Article *article = [[Article alloc] initWithTitle:[articleObj valueForKey:kTitle] iconUrlStr:strUrl iconPathComponent:nil date:[articleObj valueForKey:kPubDate] description:artDescription link:[articleObj valueForKey:kLink] images:[articleObj valueForKey:kMediaContent] andVideoContent:[articleObj valueForKey:kVideoContent]];
+        
+        if(article.iconUrl != nil) {
+        [ArticlesViewController downloadTaskWith:article.iconUrl handler:^(NSURL *destinationUrl) {
+            if(destinationUrl != nil) {
+            article.originalIconUrl = destinationUrl;
+                if(i == fetchedDataForArticles.count - 1) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [tableView reloadData];
+                });
+            }
+            }
+        }];
+        } else {
+            NSLog(@"article.iconUrl ====== NILLLL");
+        }
         
         [mutArticlse addObject:article];
     }
     return mutArticlse.copy;
+}
+
++ (void)downloadTaskWith:(NSURL *)url handler:(void(^)(NSURL *destinationUrl))complition {
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    [request setHTTPMethod:@"GET"];
+    
+    NSURLSession *session = [NSURLSession sharedSession];
+    
+    NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithRequest:request completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSURL*destinationUrl;
+        if(location != nil) {
+            NSFileManager *fm = [NSFileManager defaultManager];
+            NSArray *urlS = [fm URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
+            NSURL *documentDir = [urlS objectAtIndex:0];
+            NSURL *originalUrl = [NSURL URLWithString:[location lastPathComponent]];
+            destinationUrl = [documentDir URLByAppendingPathComponent:[originalUrl lastPathComponent]];
+            NSLog(@"destinationUrl\n %@", destinationUrl);
+            [fm copyItemAtURL:location toURL:destinationUrl error:nil];
+            complition(destinationUrl);
+        } else {
+            complition(nil);
+        }
+        
+    }];
+    [downloadTask resume];
 }
 
 //take url of article icon and article description (parse <description></> tag)

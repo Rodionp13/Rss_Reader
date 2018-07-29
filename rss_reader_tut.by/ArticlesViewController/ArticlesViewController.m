@@ -59,21 +59,22 @@ static NSString *const kMediaTypeMp4 = @"mp4";
     ArticleCell *cell = [[tableView dequeueReusableCellWithIdentifier:kCellId2 forIndexPath:indexPath] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:kCellId2];
     Article *article = [self.articles objectAtIndex:indexPath.row];
     
-    [AppDelegate downloadTaskWith:article.iconUrl handler:^(NSURL *destinationUrl) {
-        NSData *dataImg = [[NSData alloc] initWithContentsOfURL:destinationUrl];
-        UIImage *imgNew = [[UIImage alloc] initWithData:dataImg];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [cell.imageView setImage:imgNew];
-        });
-        
-    }];
     
-    [cell.textLabel setText:[article.originalIconUrl lastPathComponent]];
-    [cell.detailTextLabel setText:article.date];
+    if(article.originalIconUrl != nil) {
+        NSData *data = [NSData dataWithContentsOfURL:article.originalIconUrl];
+        UIImage *icon = [UIImage imageWithData:data];
+        cell.imageView.image = icon;
+    } else {
+        UIImage *icon = [UIImage imageNamed:@"rss"];
+        cell.imageView.image = icon;
+    }
+    
+    [cell.textLabel setText:article.title];
+    [cell.detailTextLabel setText:article.articleDescr];
     
     return cell;
 }
+
 
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -175,9 +176,9 @@ static NSString *const kMediaTypeMp4 = @"mp4";
 
 
 - (void)parserDidEndDocument:(NSXMLParser *)parser {
-    NSArray *articlesObjects = [self parseArticlesDataIntoArticlesObjects:self.articles];
+    NSArray *articlesObjects = [self parseArticlesDataIntoArticlesObjects:self.articles tableView:self.tableView];
     [self setArticles:articlesObjects.mutableCopy];
-    
+
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadData];
     });

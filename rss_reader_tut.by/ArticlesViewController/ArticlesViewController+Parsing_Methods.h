@@ -10,5 +10,5 @@
 
 @interface ArticlesViewController (Parsing_Methods)
 
-- (NSArray *)parseArticlesDataIntoArticlesObjects:(NSMutableArray *)fetchedDataForArticles;
+- (NSArray *)parseArticlesDataIntoArticlesObjects:(NSMutableArray *)fetchedDataForArticles tableView:(UITableView*)tableView;
 @end

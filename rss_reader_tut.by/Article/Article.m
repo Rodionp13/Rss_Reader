@@ -16,7 +16,9 @@
     if(self) {
         _title = title;
         _iconUrl = [NSURL URLWithString:iconUrlString];
-        _originalIconUrl = [NSURL URLWithString:iconPathComponent];
+        if(iconPathComponent != nil) {
+            _originalIconUrl = [NSURL URLWithString:iconPathComponent];
+        } else {_originalIconUrl = nil;}
         _date = date;
         _articleDescr = description;
         _articleLink = [NSURL URLWithString:link];
@@ -26,8 +28,8 @@
     return self;
 }
 
-- (NSString *)description {
-    return [NSString stringWithFormat:@"ARTICLE:\ntitle %@\n iconUrl %@\n originalUrl %@\n date %@\n artDescription %@\n imges %@\n videoContent%@\n\n\n\n\n", self.title,self.iconUrl,self.originalIconUrl,self.date,self.articleDescr, self.imageContentURLsAndNames, self.videoContentURLsAndNames];
-}
+//- (NSString *)description {
+//    return [NSString stringWithFormat:@"ARTICLE:\ntitle %@\n iconUrl %@\n originalUrl %@\n date %@\n artDescription %@\n imges %@\n videoContent%@\n\n\n\n\n", self.title,self.iconUrl,self.originalIconUrl,self.date,self.articleDescr, self.imageContentURLsAndNames, self.videoContentURLsAndNames];
+//}
 
 @end
