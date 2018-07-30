@@ -12,6 +12,7 @@
 #import "Channel.h"
 #import "FirstCell.h"
 #import "HTMLParser.h"
+#import "Downloader.h"
 
 static NSString *const kCellId = @"myCell";
 
@@ -147,8 +148,6 @@ static NSString *const kCellId = @"myCell";
     });
 }
 
-
-
 - (NSString *)copyItem:(NSURL *)location {
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSArray *urls = [fileManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
@@ -158,7 +157,9 @@ static NSString *const kCellId = @"myCell";
     
     NSError *err;
     [fileManager copyItemAtURL:location toURL:destinationUrl error:&err];
-    [AppDelegate printError:err withDescr:@"Failed to copy item"];
+    if(err != nil) {
+        NSLog(@"Failed to copy item\%@\%@", err, err.localizedDescription);
+    }
     NSLog(@"%@", location);
     NSLog(@"%@", destinationUrl);
     NSData *data = [[NSData alloc] initWithContentsOfURL:destinationUrl];
@@ -168,16 +169,13 @@ static NSString *const kCellId = @"myCell";
     
     NSError *removeErr;
     [fileManager removeItemAtURL:destinationUrl error:&removeErr];
-    [AppDelegate printError:removeErr withDescr:@"Failed to remove item"];
+    if(removeErr != nil) {
+        NSLog(@"Failed to remove item\%@\%@", removeErr, removeErr.localizedDescription);
+    }
+    
     
     return resStr;
 }
-
-//+ (void)printError:(NSError*)error withDescr:(NSString *)descr {
-//    if(error != nil) {
-//        NSLog(@"%@\n%@\n%@", descr, error, [error localizedDescription]);
-//    } else {NSLog(@"Success");}
-//}
 
 
 

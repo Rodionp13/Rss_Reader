@@ -59,16 +59,15 @@ static NSString *const kMediaTypeMp4 = @"mp4";
     ArticleCell *cell = [[tableView dequeueReusableCellWithIdentifier:kCellId2 forIndexPath:indexPath] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:kCellId2];
     Article *article = [self.articles objectAtIndex:indexPath.row];
     
-    
+    UIImage *icon;
     if(article.originalIconUrl != nil) {
         NSData *data = [NSData dataWithContentsOfURL:article.originalIconUrl];
-        UIImage *icon = [UIImage imageWithData:data];
-        cell.imageView.image = icon;
+        icon = [UIImage imageWithData:data];
     } else {
-        UIImage *icon = [UIImage imageNamed:@"rss"];
-        cell.imageView.image = icon;
+        icon = [UIImage imageNamed:@"rss"];
     }
     
+    cell.imageView.image = icon;
     [cell.textLabel setText:article.title];
     [cell.detailTextLabel setText:article.articleDescr];
     
@@ -89,7 +88,7 @@ static NSString *const kMediaTypeMp4 = @"mp4";
 - (void)download {
     NSURL *myUrl = [NSURL URLWithString:self.stringUrl];
 
-    [AppDelegate downloadTaskWith:myUrl handler:^(NSURL *destinationUrl) {
+    [Downloader downloadTaskWith:myUrl handler:^(NSURL *destinationUrl) {
         if(destinationUrl != nil) {
             self.xmlParser = [[NSXMLParser alloc] initWithContentsOfURL:destinationUrl];
             [self.xmlParser setDelegate:self];
@@ -135,7 +134,7 @@ static NSString *const kMediaTypeMp4 = @"mp4";
     }
     
     self.currentString = elementName;
-    NSLog(@"didStartElement ---> %@", elementName);
+//    NSLog(@"didStartElement ---> %@", elementName);
 }
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
@@ -145,7 +144,7 @@ static NSString *const kMediaTypeMp4 = @"mp4";
                 [self.foundValue appendString:trimmingStr];
         }
     }
-    NSLog(@"foundCharacters ---> %@", string);
+//    NSLog(@"foundCharacters ---> %@", string);
 }
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
@@ -170,7 +169,7 @@ static NSString *const kMediaTypeMp4 = @"mp4";
             }
         }
     }
-    NSLog(@"didEndElement ---> %@", elementName);
+//    NSLog(@"didEndElement ---> %@", elementName);
     [self.foundValue setString:@""];
 }
 
@@ -179,9 +178,9 @@ static NSString *const kMediaTypeMp4 = @"mp4";
     NSArray *articlesObjects = [self parseArticlesDataIntoArticlesObjects:self.articles tableView:self.tableView];
     [self setArticles:articlesObjects.mutableCopy];
 
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.tableView reloadData];
-    });
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        [self.tableView reloadData];
+//    });
     NSLog(@"parserDidEndDocument");
 }
 

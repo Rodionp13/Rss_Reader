@@ -23,6 +23,7 @@
 		3D72CEC8210B2DD70044C0D5 /* ArticlesViewController+Parsing_Methods.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D72CEC7210B2DD70044C0D5 /* ArticlesViewController+Parsing_Methods.m */; };
 		3D72CECE210B50230044C0D5 /* ArticleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D72CECD210B50230044C0D5 /* ArticleCell.m */; };
 		3D99E6722108D462008E3BA1 /* ArticlesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D99E6712108D462008E3BA1 /* ArticlesViewController.m */; };
+		CEEFAADE210DFF0300397A91 /* Downloader.m in Sources */ = {isa = PBXBuildFile; fileRef = CEEFAADD210DFF0300397A91 /* Downloader.m */; };
 		CEF4C404210A868F007BA9DA /* Article.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF4C403210A868F007BA9DA /* Article.m */; };
 /* End PBXBuildFile section */
 
@@ -74,6 +75,8 @@
 		3D72CECD210B50230044C0D5 /* ArticleCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ArticleCell.m; sourceTree = "<group>"; };
 		3D99E6702108D462008E3BA1 /* ArticlesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ArticlesViewController.h; sourceTree = "<group>"; };
 		3D99E6712108D462008E3BA1 /* ArticlesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ArticlesViewController.m; sourceTree = "<group>"; };
+		CEEFAADC210DFF0300397A91 /* Downloader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Downloader.h; sourceTree = "<group>"; };
+		CEEFAADD210DFF0300397A91 /* Downloader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Downloader.m; sourceTree = "<group>"; };
 		CEF4C402210A868F007BA9DA /* Article.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Article.h; sourceTree = "<group>"; };
 		CEF4C403210A868F007BA9DA /* Article.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Article.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -209,6 +212,8 @@
 			children = (
 				3D03B21E21089B2F005F1029 /* HTMLParser.h */,
 				3D03B21C21089B2E005F1029 /* HTMLParser.m */,
+				CEEFAADC210DFF0300397A91 /* Downloader.h */,
+				CEEFAADD210DFF0300397A91 /* Downloader.m */,
 			);
 			path = HTMLParser;
 			sourceTree = "<group>";
@@ -354,6 +359,7 @@
 			files = (
 				3D03B1EF21089ACC005F1029 /* rss_reader_tut_by.xcdatamodeld in Sources */,
 				3D99E6722108D462008E3BA1 /* ArticlesViewController.m in Sources */,
+				CEEFAADE210DFF0300397A91 /* Downloader.m in Sources */,
 				3D72CECE210B50230044C0D5 /* ArticleCell.m in Sources */,
 				CEF4C404210A868F007BA9DA /* Article.m in Sources */,
 				3D72CEC8210B2DD70044C0D5 /* ArticlesViewController+Parsing_Methods.m in Sources */,

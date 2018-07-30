@@ -97,14 +97,6 @@
     [AppDelegate printError:err withDescr:@"Failed to copy item"];
     NSLog(@"%@", location);
     NSLog(@"%@", destinationUrl);
-//    NSData *data = [[NSData alloc] initWithContentsOfURL:destinationUrl];
-//    NSString *resStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    
-    
-    
-//    NSError *removeErr;
-//    [fileManager removeItemAtURL:destinationUrl error:&removeErr];
-//    [AppDelegate printError:removeErr withDescr:@"Failed to remove item"];
     
     return destinationUrl;
 }

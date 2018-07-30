@@ -12,6 +12,7 @@
 #import "Article.h"
 #import "ArticleCell.h"
 #import "FirstCell.h"
+#import "Downloader.h"
 
 static NSString *const kItem = @"item";
 static NSString *const kTitle = @"title";

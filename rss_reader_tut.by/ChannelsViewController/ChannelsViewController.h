@@ -10,6 +10,4 @@
 
 @interface ChannelsViewController : UIViewController <NSURLSessionDelegate, NSURLSessionDownloadDelegate, UITableViewDataSource, UITableViewDelegate>
 
-
 @end
-

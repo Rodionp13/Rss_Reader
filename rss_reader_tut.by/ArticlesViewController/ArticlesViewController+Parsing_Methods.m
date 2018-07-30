@@ -7,6 +7,7 @@
 //
 
 #import "ArticlesViewController+Parsing_Methods.h"
+#import "Downloader.h"
 
 @implementation ArticlesViewController (Parsing_Methods)
 
@@ -26,22 +27,19 @@
         }
         
         //Initialization of artilce instance
-        
         Article *article = [[Article alloc] initWithTitle:[articleObj valueForKey:kTitle] iconUrlStr:strUrl iconPathComponent:nil date:[articleObj valueForKey:kPubDate] description:artDescription link:[articleObj valueForKey:kLink] images:[articleObj valueForKey:kMediaContent] andVideoContent:[articleObj valueForKey:kVideoContent]];
         
         if(article.iconUrl != nil) {
-        [ArticlesViewController downloadTaskWith:article.iconUrl handler:^(NSURL *destinationUrl) {
+        [Downloader downloadTaskWith:article.iconUrl handler:^(NSURL *destinationUrl) {
             if(destinationUrl != nil) {
             article.originalIconUrl = destinationUrl;
                 if(i == fetchedDataForArticles.count - 1) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [tableView reloadData];
-                });
-            }
-            }
-        }];
+                }); }
+            } }];
         } else {
-            NSLog(@"article.iconUrl ====== NILLLL");
+            NSAssert(errno, @"article.iconUrl ====== NILLLL in downloadTaskWith Method");
         }
         
         [mutArticlse addObject:article];
@@ -49,30 +47,7 @@
     return mutArticlse.copy;
 }
 
-+ (void)downloadTaskWith:(NSURL *)url handler:(void(^)(NSURL *destinationUrl))complition {
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
-    [request setHTTPMethod:@"GET"];
-    
-    NSURLSession *session = [NSURLSession sharedSession];
-    
-    NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithRequest:request completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        NSURL*destinationUrl;
-        if(location != nil) {
-            NSFileManager *fm = [NSFileManager defaultManager];
-            NSArray *urlS = [fm URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
-            NSURL *documentDir = [urlS objectAtIndex:0];
-            NSURL *originalUrl = [NSURL URLWithString:[location lastPathComponent]];
-            destinationUrl = [documentDir URLByAppendingPathComponent:[originalUrl lastPathComponent]];
-            NSLog(@"destinationUrl\n %@", destinationUrl);
-            [fm copyItemAtURL:location toURL:destinationUrl error:nil];
-            complition(destinationUrl);
-        } else {
-            complition(nil);
-        }
-        
-    }];
-    [downloadTask resume];
-}
+
 
 //take url of article icon and article description (parse <description></> tag)
 - (NSDictionary *)parseStringFromDescriptionTag:(NSString *)strToParse {
