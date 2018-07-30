@@ -31,15 +31,18 @@
 
 + (NSURL *)copyItem:(NSURL *)location {
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSArray *urls = [fileManager URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask];
+    NSArray *urls = [fileManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
     NSURL *documentsDirectory = [urls objectAtIndex:0];
     NSURL *originalUrl = [NSURL URLWithString:[location lastPathComponent]];
     NSURL *destinationUrl = [documentsDirectory URLByAppendingPathComponent:[originalUrl lastPathComponent]];
+    
 //    NSString *urlToNewDirect = [[documentsDirectory URLByAppendingPathComponent:@"myNewDir"] path];
 //    NSError *creationErr;
 //    [fileManager createDirectoryAtPath:urlToNewDirect withIntermediateDirectories:YES attributes:nil error:&creationErr];
 //    if(creationErr != nil) {
 //        NSLog(@"Failed to create directory\n%@\n%@", creationErr, creationErr.localizedDescription);
+//    } else {
+//        NSLog(@"%@", [NSURL URLWithString:urlToNewDirect]);
 //    }
     
     

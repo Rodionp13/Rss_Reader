@@ -10,7 +10,6 @@
 		3D03B1E621089ACC005F1029 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D03B1E521089ACC005F1029 /* AppDelegate.m */; };
 		3D03B1E921089ACC005F1029 /* ChannelsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D03B1E821089ACC005F1029 /* ChannelsViewController.m */; };
 		3D03B1EC21089ACC005F1029 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D03B1EA21089ACC005F1029 /* Main.storyboard */; };
-		3D03B1EF21089ACC005F1029 /* rss_reader_tut_by.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3D03B1ED21089ACC005F1029 /* rss_reader_tut_by.xcdatamodeld */; };
 		3D03B1F121089ACD005F1029 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D03B1F021089ACD005F1029 /* Assets.xcassets */; };
 		3D03B1F421089ACD005F1029 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D03B1F221089ACD005F1029 /* LaunchScreen.storyboard */; };
 		3D03B1F721089ACD005F1029 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D03B1F621089ACD005F1029 /* main.m */; };
@@ -23,6 +22,13 @@
 		3D72CEC8210B2DD70044C0D5 /* ArticlesViewController+Parsing_Methods.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D72CEC7210B2DD70044C0D5 /* ArticlesViewController+Parsing_Methods.m */; };
 		3D72CECE210B50230044C0D5 /* ArticleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D72CECD210B50230044C0D5 /* ArticleCell.m */; };
 		3D99E6722108D462008E3BA1 /* ArticlesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D99E6712108D462008E3BA1 /* ArticlesViewController.m */; };
+		CECB0B85210F7CBA0093D738 /* rss_reader_tut_by.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CECB0B83210F7CBA0093D738 /* rss_reader_tut_by.xcdatamodeld */; };
+		CED6EB91210FA430003A72C0 /* ChannelMO+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6EB8B210FA430003A72C0 /* ChannelMO+CoreDataClass.m */; };
+		CED6EB92210FA430003A72C0 /* ChannelMO+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6EB8C210FA430003A72C0 /* ChannelMO+CoreDataProperties.m */; };
+		CED6EB93210FA430003A72C0 /* ArticleMO+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6EB8F210FA430003A72C0 /* ArticleMO+CoreDataClass.m */; };
+		CED6EB94210FA430003A72C0 /* ArticleMO+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6EB90210FA430003A72C0 /* ArticleMO+CoreDataProperties.m */; };
+		CED6EB99210FA49D003A72C0 /* CDManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6EB98210FA49D003A72C0 /* CDManager.m */; };
+		CED6EB9D210FA7D8003A72C0 /* APPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6EB9C210FA7D8003A72C0 /* APPManager.m */; };
 		CEEFAADE210DFF0300397A91 /* Downloader.m in Sources */ = {isa = PBXBuildFile; fileRef = CEEFAADD210DFF0300397A91 /* Downloader.m */; };
 		CEF4C404210A868F007BA9DA /* Article.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF4C403210A868F007BA9DA /* Article.m */; };
 /* End PBXBuildFile section */
@@ -51,7 +57,6 @@
 		3D03B1E721089ACC005F1029 /* ChannelsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChannelsViewController.h; sourceTree = "<group>"; };
 		3D03B1E821089ACC005F1029 /* ChannelsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChannelsViewController.m; sourceTree = "<group>"; };
 		3D03B1EB21089ACC005F1029 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		3D03B1EE21089ACC005F1029 /* rss_reader_tut_by.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = rss_reader_tut_by.xcdatamodel; sourceTree = "<group>"; };
 		3D03B1F021089ACD005F1029 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3D03B1F321089ACD005F1029 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3D03B1F521089ACD005F1029 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -75,6 +80,19 @@
 		3D72CECD210B50230044C0D5 /* ArticleCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ArticleCell.m; sourceTree = "<group>"; };
 		3D99E6702108D462008E3BA1 /* ArticlesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ArticlesViewController.h; sourceTree = "<group>"; };
 		3D99E6712108D462008E3BA1 /* ArticlesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ArticlesViewController.m; sourceTree = "<group>"; };
+		CECB0B84210F7CBA0093D738 /* rss_reader_tut_by.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = rss_reader_tut_by.xcdatamodel; sourceTree = "<group>"; };
+		CED6EB89210FA430003A72C0 /* ChannelMO+CoreDataProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ChannelMO+CoreDataProperties.h"; sourceTree = "<group>"; };
+		CED6EB8A210FA430003A72C0 /* ChannelMO+CoreDataClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ChannelMO+CoreDataClass.h"; sourceTree = "<group>"; };
+		CED6EB8B210FA430003A72C0 /* ChannelMO+CoreDataClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ChannelMO+CoreDataClass.m"; sourceTree = "<group>"; };
+		CED6EB8C210FA430003A72C0 /* ChannelMO+CoreDataProperties.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ChannelMO+CoreDataProperties.m"; sourceTree = "<group>"; };
+		CED6EB8D210FA430003A72C0 /* ArticleMO+CoreDataProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ArticleMO+CoreDataProperties.h"; sourceTree = "<group>"; };
+		CED6EB8E210FA430003A72C0 /* ArticleMO+CoreDataClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ArticleMO+CoreDataClass.h"; sourceTree = "<group>"; };
+		CED6EB8F210FA430003A72C0 /* ArticleMO+CoreDataClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ArticleMO+CoreDataClass.m"; sourceTree = "<group>"; };
+		CED6EB90210FA430003A72C0 /* ArticleMO+CoreDataProperties.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ArticleMO+CoreDataProperties.m"; sourceTree = "<group>"; };
+		CED6EB97210FA49D003A72C0 /* CDManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CDManager.h; sourceTree = "<group>"; };
+		CED6EB98210FA49D003A72C0 /* CDManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CDManager.m; sourceTree = "<group>"; };
+		CED6EB9B210FA7D8003A72C0 /* APPManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = APPManager.h; sourceTree = "<group>"; };
+		CED6EB9C210FA7D8003A72C0 /* APPManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = APPManager.m; sourceTree = "<group>"; };
 		CEEFAADC210DFF0300397A91 /* Downloader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Downloader.h; sourceTree = "<group>"; };
 		CEEFAADD210DFF0300397A91 /* Downloader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Downloader.m; sourceTree = "<group>"; };
 		CEF4C402210A868F007BA9DA /* Article.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Article.h; sourceTree = "<group>"; };
@@ -110,6 +128,9 @@
 		3D03B1D821089ACC005F1029 = {
 			isa = PBXGroup;
 			children = (
+				CED6EB9A210FA7BF003A72C0 /* APPManager */,
+				CED6EB96210FA465003A72C0 /* CDManager */,
+				CED6EB95210FA43F003A72C0 /* CDEntities */,
 				3D03B1E321089ACC005F1029 /* rss_reader_tut.by */,
 				3D03B1FF21089ACD005F1029 /* rss_reader_tut.byTests */,
 				3D03B20A21089ACD005F1029 /* rss_reader_tut.byUITests */,
@@ -137,13 +158,14 @@
 				3D99E6732108D46B008E3BA1 /* ArticlesViewController */,
 				3D99E6752108D499008E3BA1 /* Channel */,
 				CEF4C405210A869C007BA9DA /* Article */,
+				CECB0B82210F7C220093D738 /* Download */,
 				3D99E6762108D4A3008E3BA1 /* HTMLParser */,
 				3D03B1EA21089ACC005F1029 /* Main.storyboard */,
+				CECB0B83210F7CBA0093D738 /* rss_reader_tut_by.xcdatamodeld */,
 				3D03B1F021089ACD005F1029 /* Assets.xcassets */,
 				3D03B1F221089ACD005F1029 /* LaunchScreen.storyboard */,
 				3D03B1F521089ACD005F1029 /* Info.plist */,
 				3D03B1F621089ACD005F1029 /* main.m */,
-				3D03B1ED21089ACC005F1029 /* rss_reader_tut_by.xcdatamodeld */,
 			);
 			path = rss_reader_tut.by;
 			sourceTree = "<group>";
@@ -212,10 +234,50 @@
 			children = (
 				3D03B21E21089B2F005F1029 /* HTMLParser.h */,
 				3D03B21C21089B2E005F1029 /* HTMLParser.m */,
+			);
+			path = HTMLParser;
+			sourceTree = "<group>";
+		};
+		CECB0B82210F7C220093D738 /* Download */ = {
+			isa = PBXGroup;
+			children = (
 				CEEFAADC210DFF0300397A91 /* Downloader.h */,
 				CEEFAADD210DFF0300397A91 /* Downloader.m */,
 			);
-			path = HTMLParser;
+			path = Download;
+			sourceTree = "<group>";
+		};
+		CED6EB95210FA43F003A72C0 /* CDEntities */ = {
+			isa = PBXGroup;
+			children = (
+				CED6EB89210FA430003A72C0 /* ChannelMO+CoreDataProperties.h */,
+				CED6EB8A210FA430003A72C0 /* ChannelMO+CoreDataClass.h */,
+				CED6EB8B210FA430003A72C0 /* ChannelMO+CoreDataClass.m */,
+				CED6EB8C210FA430003A72C0 /* ChannelMO+CoreDataProperties.m */,
+				CED6EB8D210FA430003A72C0 /* ArticleMO+CoreDataProperties.h */,
+				CED6EB8E210FA430003A72C0 /* ArticleMO+CoreDataClass.h */,
+				CED6EB8F210FA430003A72C0 /* ArticleMO+CoreDataClass.m */,
+				CED6EB90210FA430003A72C0 /* ArticleMO+CoreDataProperties.m */,
+			);
+			path = CDEntities;
+			sourceTree = "<group>";
+		};
+		CED6EB96210FA465003A72C0 /* CDManager */ = {
+			isa = PBXGroup;
+			children = (
+				CED6EB97210FA49D003A72C0 /* CDManager.h */,
+				CED6EB98210FA49D003A72C0 /* CDManager.m */,
+			);
+			path = CDManager;
+			sourceTree = "<group>";
+		};
+		CED6EB9A210FA7BF003A72C0 /* APPManager */ = {
+			isa = PBXGroup;
+			children = (
+				CED6EB9B210FA7D8003A72C0 /* APPManager.h */,
+				CED6EB9C210FA7D8003A72C0 /* APPManager.m */,
+			);
+			path = APPManager;
 			sourceTree = "<group>";
 		};
 		CEF4C405210A869C007BA9DA /* Article */ = {
@@ -357,16 +419,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3D03B1EF21089ACC005F1029 /* rss_reader_tut_by.xcdatamodeld in Sources */,
+				CED6EB91210FA430003A72C0 /* ChannelMO+CoreDataClass.m in Sources */,
 				3D99E6722108D462008E3BA1 /* ArticlesViewController.m in Sources */,
 				CEEFAADE210DFF0300397A91 /* Downloader.m in Sources */,
 				3D72CECE210B50230044C0D5 /* ArticleCell.m in Sources */,
+				CED6EB94210FA430003A72C0 /* ArticleMO+CoreDataProperties.m in Sources */,
+				CED6EB93210FA430003A72C0 /* ArticleMO+CoreDataClass.m in Sources */,
 				CEF4C404210A868F007BA9DA /* Article.m in Sources */,
+				CED6EB9D210FA7D8003A72C0 /* APPManager.m in Sources */,
+				CED6EB92210FA430003A72C0 /* ChannelMO+CoreDataProperties.m in Sources */,
 				3D72CEC8210B2DD70044C0D5 /* ArticlesViewController+Parsing_Methods.m in Sources */,
 				3D03B22421089B2F005F1029 /* Channel.m in Sources */,
 				3D03B1E921089ACC005F1029 /* ChannelsViewController.m in Sources */,
 				3D03B22321089B2F005F1029 /* FirstCell.m in Sources */,
+				CED6EB99210FA49D003A72C0 /* CDManager.m in Sources */,
 				3D03B1F721089ACD005F1029 /* main.m in Sources */,
+				CECB0B85210F7CBA0093D738 /* rss_reader_tut_by.xcdatamodeld in Sources */,
 				3D03B1E621089ACC005F1029 /* AppDelegate.m in Sources */,
 				3D03B22221089B2F005F1029 /* HTMLParser.m in Sources */,
 			);
@@ -681,12 +749,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		3D03B1ED21089ACC005F1029 /* rss_reader_tut_by.xcdatamodeld */ = {
+		CECB0B83210F7CBA0093D738 /* rss_reader_tut_by.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				3D03B1EE21089ACC005F1029 /* rss_reader_tut_by.xcdatamodel */,
+				CECB0B84210F7CBA0093D738 /* rss_reader_tut_by.xcdatamodel */,
 			);
-			currentVersion = 3D03B1EE21089ACC005F1029 /* rss_reader_tut_by.xcdatamodel */;
+			currentVersion = CECB0B84210F7CBA0093D738 /* rss_reader_tut_by.xcdatamodel */;
 			path = rss_reader_tut_by.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

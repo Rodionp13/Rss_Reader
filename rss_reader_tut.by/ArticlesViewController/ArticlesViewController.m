@@ -113,7 +113,7 @@ static NSString *const kMediaTypeMp4 = @"mp4";
     self.foundValue = [[NSMutableString alloc] init];
     self.arrOfImageContent = [[NSMutableArray alloc] init];
     self.arrOfVideoContent = [[NSMutableArray alloc] init];
-    NSLog(@"parserDidStartDocument");
+//    NSLog(@"parserDidStartDocument");
 }
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary<NSString *,NSString *> *)attributeDict {
@@ -181,7 +181,7 @@ static NSString *const kMediaTypeMp4 = @"mp4";
 //    dispatch_async(dispatch_get_main_queue(), ^{
 //        [self.tableView reloadData];
 //    });
-    NSLog(@"parserDidEndDocument");
+//    NSLog(@"parserDidEndDocument");
 }
 
 

@@ -17,7 +17,7 @@
 
 - (void)saveContext;
 
-+ (void)downloadTaskWith:(NSURL *)url handler:(void(^)(NSURL *destinationUrl))complition;
+//+ (void)downloadTaskWith:(NSURL *)url handler:(void(^)(NSURL *destinationUrl))complition;
 + (void)printError:(NSError*)error withDescr:(NSString *)descr;
 
 

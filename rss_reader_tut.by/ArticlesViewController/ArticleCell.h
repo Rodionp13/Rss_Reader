@@ -13,6 +13,6 @@
 @property(strong, nonatomic) UILabel *date;
 @property(strong, nonatomic) UIImageView *myImageView;
 
-- (void) configureCellWithTitleText:(NSString *)textLabel data:(NSString *)date;
-- (UIImageView*) configureCellImage;
+//- (void) configureCellWithTitleText:(NSString *)textLabel data:(NSString *)date;
+//- (UIImageView*) configureCellImage;
 @end

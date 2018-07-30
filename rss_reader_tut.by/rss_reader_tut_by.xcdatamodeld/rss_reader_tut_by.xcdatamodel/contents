@@ -1,4 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14135" systemVersion="17C88" minimumToolsVersion="Automatic" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
-    <elements/>
+    <entity name="ArticleEnt" representedClassName="ArticleMO" syncable="YES">
+        <attribute name="articleDescr" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="articleLink" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="iconUrl" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="originalIconUrl" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="channel" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="ChannelEnt" inverseName="articles" inverseEntity="ChannelEnt" syncable="YES"/>
+        <relationship name="imageContentURLsAndNames" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ImageContentURLAndNameEnt" inverseName="article" inverseEntity="ImageContentURLAndNameEnt" syncable="YES"/>
+        <relationship name="videoContentURLsAndNames" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="VideoContentURLAndNameEnt" inverseName="article" inverseEntity="VideoContentURLAndNameEnt" syncable="YES"/>
+    </entity>
+    <entity name="ChannelEnt" representedClassName="ChannelMO" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="articles" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ArticleEnt" inverseName="channel" inverseEntity="ArticleEnt" syncable="YES"/>
+    </entity>
+    <entity name="ImageContentURLAndNameEnt" representedClassName="ImageContentURLAndNameMO" syncable="YES" codeGenerationType="class">
+        <attribute name="imageUrl" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="article" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="ArticleEnt" inverseName="imageContentURLsAndNames" inverseEntity="ArticleEnt" syncable="YES"/>
+    </entity>
+    <entity name="VideoContentURLAndNameEnt" representedClassName="VideoContentURLAndNameMO" syncable="YES" codeGenerationType="class">
+        <attribute name="videoUrl" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="article" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="ArticleEnt" inverseName="videoContentURLsAndNames" inverseEntity="ArticleEnt" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="ArticleEnt" positionX="-63" positionY="9" width="128" height="178"/>
+        <element name="ChannelEnt" positionX="-279" positionY="0" width="128" height="88"/>
+        <element name="ImageContentURLAndNameEnt" positionX="153" positionY="63" width="180" height="73"/>
+        <element name="VideoContentURLAndNameEnt" positionX="160" positionY="240" width="173" height="73"/>
+    </elements>
 </model>

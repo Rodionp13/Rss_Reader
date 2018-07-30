@@ -58,48 +58,57 @@
 
 #pragma mark - Default Session
 
-+ (void)downloadTaskWith:(NSURL *)url handler:(void(^)(NSURL *destinationUrl))complition {
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
-    [request setHTTPMethod:@"GET"];
-    
-    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-    //    NSURLSession *session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
-    
-    NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithRequest:request completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        NSURL*destinationUrl;
-        if(location != nil) {
-        NSFileManager *fm = [NSFileManager defaultManager];
-        NSArray *urlS = [fm URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
-        NSURL *documentDir = [urlS objectAtIndex:0];
-        NSURL *originalUrl = [NSURL URLWithString:[location lastPathComponent]];
-        destinationUrl = [documentDir URLByAppendingPathComponent:[originalUrl lastPathComponent]];
-        NSLog(@"destinationUrl\n %@", destinationUrl);
-        [fm copyItemAtURL:location toURL:destinationUrl error:nil];
-            complition(destinationUrl);
-        } else {
-            complition(nil);
-        }
-        
-    }];
-    [downloadTask resume];
-}
-
-+ (NSURL *)copyItem:(NSURL *)location {
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSArray *urls = [fileManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
-    NSURL *documentsDirectory = [urls objectAtIndex:0];
-    NSURL *originalUrl = [NSURL URLWithString:[location lastPathComponent]];
-    NSURL *destinationUrl = [documentsDirectory URLByAppendingPathComponent:[originalUrl lastPathComponent]];
-    
-    NSError *err;
-    [fileManager copyItemAtURL:location toURL:destinationUrl error:&err];
-    [AppDelegate printError:err withDescr:@"Failed to copy item"];
-    NSLog(@"%@", location);
-    NSLog(@"%@", destinationUrl);
-    
-    return destinationUrl;
-}
+//+ (void)downloadTaskWith:(NSURL *)url handler:(void(^)(NSURL *destinationUrl))complition {
+//    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+//    [request setHTTPMethod:@"GET"];
+//    
+//    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+//    //    NSURLSession *session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
+//    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
+//    
+//    NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithRequest:request completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+//        NSURL*destinationUrl;
+//        if(location != nil) {
+//        NSFileManager *fm = [NSFileManager defaultManager];
+//        NSArray *urlS = [fm URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
+//        NSURL *documentDir = [urlS objectAtIndex:0];
+//        NSURL *originalUrl = [NSURL URLWithString:[location lastPathComponent]];
+//        destinationUrl = [documentDir URLByAppendingPathComponent:[originalUrl lastPathComponent]];
+//        NSLog(@"destinationUrl\n %@", destinationUrl);
+//        [fm copyItemAtURL:location toURL:destinationUrl error:nil];
+//            complition(destinationUrl);
+//        } else {
+//            complition(nil);
+//        }
+//        
+//    }];
+//    [downloadTask resume];
+//}
+//
+//+ (NSURL *)copyItem:(NSURL *)location {
+//    NSFileManager *fileManager = [NSFileManager defaultManager];
+//    NSArray *urls = [fileManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
+//    NSURL *documentsDirectory = [urls objectAtIndex:0];
+//    NSURL *originalUrl = [NSURL URLWithString:[location lastPathComponent]];
+//    NSURL *destinationUrl = [documentsDirectory URLByAppendingPathComponent:[originalUrl lastPathComponent]];
+//    
+//    NSError *err;
+//    [fileManager copyItemAtURL:location toURL:destinationUrl error:&err];
+//    [AppDelegate printError:err withDescr:@"Failed to copy item"];
+//    NSLog(@"%@", location);
+//    NSLog(@"%@", destinationUrl);
+//    
+//    return destinationUrl;
+//}
+//
+//- (void)removeFileFromDirectory:(NSURL*)destinationUrl {
+//    NSFileManager *fileManager = [NSFileManager defaultManager];
+//    NSError *removeErr;
+//    [fileManager removeItemAtURL:destinationUrl error:&removeErr];
+//    if(removeErr != nil) {
+//        NSLog(@"Failed to remove item\%@\%@", removeErr, removeErr.localizedDescription);
+//    }
+//}
 
 + (void)printError:(NSError*)error withDescr:(NSString *)descr {
     if(error != nil) {

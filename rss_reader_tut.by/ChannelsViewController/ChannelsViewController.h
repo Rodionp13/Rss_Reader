@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "APPManager.h"
 
-@interface ChannelsViewController : UIViewController <NSURLSessionDelegate, NSURLSessionDownloadDelegate, UITableViewDataSource, UITableViewDelegate>
+@interface ChannelsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, APPManagerDelegate>
 
 @end
