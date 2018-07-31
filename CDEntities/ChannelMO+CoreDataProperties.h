@@ -2,7 +2,7 @@
 //  ChannelMO+CoreDataProperties.h
 //  rss_reader_tut.by
 //
-//  Created by User on 7/30/18.
+//  Created by User on 7/31/18.
 //  Copyright © 2018 Radzivon Uhrynovich. All rights reserved.
 //
 //
@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, nonatomic, copy) NSString *name;
 @property (nullable, nonatomic, copy) NSString *url;
+@property (nullable, nonatomic, copy) NSString *channelGroup;
 @property (nullable, nonatomic, retain) NSSet<ArticleMO *> *articles;
 
 @end

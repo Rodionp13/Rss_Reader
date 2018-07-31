@@ -10,9 +10,20 @@
 #import "ChannelMO+CoreDataClass.h"
 #import "ArticleMO+CoreDataClass.h"
 #import "AppDelegate.h"
+#import "APPManager.h"
+
+static NSString *const kArticleEnt = @"ArticleEnt";
+static NSString *const kChannelEnt = @"ChannelEnt";
+static NSString *const kImageContentURLAndNameEnt = @"ImageContentURLAndNameEnt";
+static NSString *const kVideoContentURLAndNameEnt = @"VideoContentURLAndNameEnt";
+
+//entity attributes && relationshops
+static NSString *const kChannelGroup = @"channelGroup";
 
 
 @interface CDManager : NSObject
 
-- (NSArray *)loadDataFromDBWithPredicate:(nullable NSPredicate*)predicate;
+- (void)addNewRecordsToDB:(NSDictionary *)channelGroups;
+- (NSDictionary *)parseMOinToObjects:(NSArray*)managedObjects;
+- (NSArray *)loadDataFromDBWithPredicate:(nullable NSPredicate*)predicate andDescriptor:(nullable NSArray<NSSortDescriptor*>*)sortDescriptors;
 @end

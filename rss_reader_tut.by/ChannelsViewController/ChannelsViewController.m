@@ -64,7 +64,8 @@ static NSString *const kChannelsLink = @"https://news.tut.by/rss.html";
     self.appManager = [[APPManager alloc] init];
     self.appManager.delegate = self;
 //    [self executeGetQuery: @"https://news.tut.by/rss.html"];
-    [self downloadDataChannels:[NSURL URLWithString:kChannelsLink]];
+//    [self downloadDataChannels:[NSURL URLWithString:kChannelsLink]];
+    [self.appManager checkingForLoadingChennelContent];
     
     self.myTable = [[UITableView alloc] initWithFrame:self.view.frame];
     [self.myTable setDelegate:self];
@@ -137,57 +138,23 @@ static NSString *const kChannelsLink = @"https://news.tut.by/rss.html";
     return 40;
 }
 
-- (void)downloadDataChannels:(NSURL *)url {
-//    [self downloadTaskWith:url handler:^(NSURL *destinationUrl) {
+//- (void)downloadDataChannels:(NSURL *)url {
+//    [Downloader downloadTaskWith:url handler:^(NSURL *destinationUrl) {
 //        if(destinationUrl != nil) {
-//        NSData *data = [[NSData alloc] initWithContentsOfURL:destinationUrl];
-//        NSString *resString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-//        NSDictionary *channelsAndHeaders = [self.parser parseHTML:resString];
-//        [self removeItem:destinationUrl];
-    [Downloader downloadTaskWith:url handler:^(NSURL *destinationUrl) {
-        if(destinationUrl != nil) {
-            NSData *data = [[NSData alloc] initWithContentsOfURL:destinationUrl];
-            NSString *resString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            NSDictionary *channelsAndHeaders = [self.parser parseHTML:resString];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.headers = [channelsAndHeaders valueForKey:kHeaders];
-                self.channels = [channelsAndHeaders valueForKey:kChannels];
-                self.freshNewsForAllArticles = [channelsAndHeaders valueForKey:kFreshNews];
-                [self.myTable reloadData];
-            });
-        } else {NSAssert(errno, @"Failed to load channels");}
-    }];
-    
-        //complition
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            self.headers = [channelsAndHeaders valueForKey:kHeaders];
-//            self.channels = [channelsAndHeaders valueForKey:kChannels];
-//            self.freshNewsForAllArticles = [channelsAndHeaders valueForKey:kFreshNews];
-//            [self.myTable reloadData];
-//        });
+//            NSData *data = [[NSData alloc] initWithContentsOfURL:destinationUrl];
+//            NSString *resString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+//            NSDictionary *channelsAndHeaders = [self.parser parseHTML:resString];
+//
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                self.headers = [channelsAndHeaders valueForKey:kHeaders];
+//                self.channels = [channelsAndHeaders valueForKey:kChannels];
+//                self.freshNewsForAllArticles = [channelsAndHeaders valueForKey:kFreshNews];
+//                [self.myTable reloadData];
+//            });
 //        } else {NSAssert(errno, @"Failed to load channels");}
 //    }];
-}
-
-//- (void)downloadTaskWith:(NSURL *)url handler:(void(^)(NSURL *destinationUrl))complition {
-//    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
-//    [request setHTTPMethod:@"GET"];
-//
-//    NSURLSession *session = [NSURLSession sharedSession];
-//
-//    NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithRequest:request completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-//
-//        if(location != nil) {
-//            NSURL *destinationUrl = [self copyItem:location];
-//            complition(destinationUrl);
-//        } else {
-//            complition(nil);
-//        }
-//
-//    }];
-//    [downloadTask resume];
 //}
+
 //
 //- (NSURL*)copyItem:(NSURL *)location {
 //    NSFileManager *fileManager = [NSFileManager defaultManager];

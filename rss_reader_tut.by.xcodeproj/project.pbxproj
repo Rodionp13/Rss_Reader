@@ -23,12 +23,12 @@
 		3D72CECE210B50230044C0D5 /* ArticleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D72CECD210B50230044C0D5 /* ArticleCell.m */; };
 		3D99E6722108D462008E3BA1 /* ArticlesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D99E6712108D462008E3BA1 /* ArticlesViewController.m */; };
 		CECB0B85210F7CBA0093D738 /* rss_reader_tut_by.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CECB0B83210F7CBA0093D738 /* rss_reader_tut_by.xcdatamodeld */; };
-		CED6EB91210FA430003A72C0 /* ChannelMO+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6EB8B210FA430003A72C0 /* ChannelMO+CoreDataClass.m */; };
-		CED6EB92210FA430003A72C0 /* ChannelMO+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6EB8C210FA430003A72C0 /* ChannelMO+CoreDataProperties.m */; };
 		CED6EB93210FA430003A72C0 /* ArticleMO+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6EB8F210FA430003A72C0 /* ArticleMO+CoreDataClass.m */; };
 		CED6EB94210FA430003A72C0 /* ArticleMO+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6EB90210FA430003A72C0 /* ArticleMO+CoreDataProperties.m */; };
 		CED6EB99210FA49D003A72C0 /* CDManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6EB98210FA49D003A72C0 /* CDManager.m */; };
 		CED6EB9D210FA7D8003A72C0 /* APPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6EB9C210FA7D8003A72C0 /* APPManager.m */; };
+		CED6EBA2210FD28A003A72C0 /* ChannelMO+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6EBA0210FD28A003A72C0 /* ChannelMO+CoreDataClass.m */; };
+		CED6EBA3210FD28A003A72C0 /* ChannelMO+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6EBA1210FD28A003A72C0 /* ChannelMO+CoreDataProperties.m */; };
 		CEEFAADE210DFF0300397A91 /* Downloader.m in Sources */ = {isa = PBXBuildFile; fileRef = CEEFAADD210DFF0300397A91 /* Downloader.m */; };
 		CEF4C404210A868F007BA9DA /* Article.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF4C403210A868F007BA9DA /* Article.m */; };
 /* End PBXBuildFile section */
@@ -81,10 +81,6 @@
 		3D99E6702108D462008E3BA1 /* ArticlesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ArticlesViewController.h; sourceTree = "<group>"; };
 		3D99E6712108D462008E3BA1 /* ArticlesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ArticlesViewController.m; sourceTree = "<group>"; };
 		CECB0B84210F7CBA0093D738 /* rss_reader_tut_by.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = rss_reader_tut_by.xcdatamodel; sourceTree = "<group>"; };
-		CED6EB89210FA430003A72C0 /* ChannelMO+CoreDataProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ChannelMO+CoreDataProperties.h"; sourceTree = "<group>"; };
-		CED6EB8A210FA430003A72C0 /* ChannelMO+CoreDataClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ChannelMO+CoreDataClass.h"; sourceTree = "<group>"; };
-		CED6EB8B210FA430003A72C0 /* ChannelMO+CoreDataClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ChannelMO+CoreDataClass.m"; sourceTree = "<group>"; };
-		CED6EB8C210FA430003A72C0 /* ChannelMO+CoreDataProperties.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ChannelMO+CoreDataProperties.m"; sourceTree = "<group>"; };
 		CED6EB8D210FA430003A72C0 /* ArticleMO+CoreDataProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ArticleMO+CoreDataProperties.h"; sourceTree = "<group>"; };
 		CED6EB8E210FA430003A72C0 /* ArticleMO+CoreDataClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ArticleMO+CoreDataClass.h"; sourceTree = "<group>"; };
 		CED6EB8F210FA430003A72C0 /* ArticleMO+CoreDataClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ArticleMO+CoreDataClass.m"; sourceTree = "<group>"; };
@@ -93,6 +89,10 @@
 		CED6EB98210FA49D003A72C0 /* CDManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CDManager.m; sourceTree = "<group>"; };
 		CED6EB9B210FA7D8003A72C0 /* APPManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = APPManager.h; sourceTree = "<group>"; };
 		CED6EB9C210FA7D8003A72C0 /* APPManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = APPManager.m; sourceTree = "<group>"; };
+		CED6EB9E210FD28A003A72C0 /* ChannelMO+CoreDataProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ChannelMO+CoreDataProperties.h"; sourceTree = "<group>"; };
+		CED6EB9F210FD28A003A72C0 /* ChannelMO+CoreDataClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ChannelMO+CoreDataClass.h"; sourceTree = "<group>"; };
+		CED6EBA0210FD28A003A72C0 /* ChannelMO+CoreDataClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ChannelMO+CoreDataClass.m"; sourceTree = "<group>"; };
+		CED6EBA1210FD28A003A72C0 /* ChannelMO+CoreDataProperties.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ChannelMO+CoreDataProperties.m"; sourceTree = "<group>"; };
 		CEEFAADC210DFF0300397A91 /* Downloader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Downloader.h; sourceTree = "<group>"; };
 		CEEFAADD210DFF0300397A91 /* Downloader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Downloader.m; sourceTree = "<group>"; };
 		CEF4C402210A868F007BA9DA /* Article.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Article.h; sourceTree = "<group>"; };
@@ -250,10 +250,10 @@
 		CED6EB95210FA43F003A72C0 /* CDEntities */ = {
 			isa = PBXGroup;
 			children = (
-				CED6EB89210FA430003A72C0 /* ChannelMO+CoreDataProperties.h */,
-				CED6EB8A210FA430003A72C0 /* ChannelMO+CoreDataClass.h */,
-				CED6EB8B210FA430003A72C0 /* ChannelMO+CoreDataClass.m */,
-				CED6EB8C210FA430003A72C0 /* ChannelMO+CoreDataProperties.m */,
+				CED6EB9E210FD28A003A72C0 /* ChannelMO+CoreDataProperties.h */,
+				CED6EBA1210FD28A003A72C0 /* ChannelMO+CoreDataProperties.m */,
+				CED6EBA0210FD28A003A72C0 /* ChannelMO+CoreDataClass.m */,
+				CED6EB9F210FD28A003A72C0 /* ChannelMO+CoreDataClass.h */,
 				CED6EB8D210FA430003A72C0 /* ArticleMO+CoreDataProperties.h */,
 				CED6EB8E210FA430003A72C0 /* ArticleMO+CoreDataClass.h */,
 				CED6EB8F210FA430003A72C0 /* ArticleMO+CoreDataClass.m */,
@@ -419,18 +419,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CED6EB91210FA430003A72C0 /* ChannelMO+CoreDataClass.m in Sources */,
 				3D99E6722108D462008E3BA1 /* ArticlesViewController.m in Sources */,
 				CEEFAADE210DFF0300397A91 /* Downloader.m in Sources */,
+				CED6EBA2210FD28A003A72C0 /* ChannelMO+CoreDataClass.m in Sources */,
 				3D72CECE210B50230044C0D5 /* ArticleCell.m in Sources */,
 				CED6EB94210FA430003A72C0 /* ArticleMO+CoreDataProperties.m in Sources */,
 				CED6EB93210FA430003A72C0 /* ArticleMO+CoreDataClass.m in Sources */,
 				CEF4C404210A868F007BA9DA /* Article.m in Sources */,
 				CED6EB9D210FA7D8003A72C0 /* APPManager.m in Sources */,
-				CED6EB92210FA430003A72C0 /* ChannelMO+CoreDataProperties.m in Sources */,
 				3D72CEC8210B2DD70044C0D5 /* ArticlesViewController+Parsing_Methods.m in Sources */,
 				3D03B22421089B2F005F1029 /* Channel.m in Sources */,
 				3D03B1E921089ACC005F1029 /* ChannelsViewController.m in Sources */,
+				CED6EBA3210FD28A003A72C0 /* ChannelMO+CoreDataProperties.m in Sources */,
 				3D03B22321089B2F005F1029 /* FirstCell.m in Sources */,
 				CED6EB99210FA49D003A72C0 /* CDManager.m in Sources */,
 				3D03B1F721089ACD005F1029 /* main.m in Sources */,
