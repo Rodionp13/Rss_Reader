@@ -19,6 +19,7 @@
 
 //+ (void)downloadTaskWith:(NSURL *)url handler:(void(^)(NSURL *destinationUrl))complition;
 + (void)printError:(NSError*)error withDescr:(NSString *)descr;
++ (BOOL)isNetworkAvailable;
 
 
 @end

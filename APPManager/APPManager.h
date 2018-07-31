@@ -12,6 +12,7 @@
 @optional
 
 - (void) complitionLoadingChannelsData:(NSDictionary *)channelsData;
+//- (void) updateTableView:(NSA
 @end
 
 //@protocol APPManagerCoreDateDelegate
