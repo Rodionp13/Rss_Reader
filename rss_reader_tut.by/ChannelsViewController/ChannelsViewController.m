@@ -62,8 +62,6 @@ static NSString *const kChannelsLink = @"https://news.tut.by/rss.html";
     self.parser = [[HTMLParser alloc] init];
     self.appManager = [[APPManager alloc] init];
     self.appManager.delegate = self;
-//    [self executeGetQuery: @"https://news.tut.by/rss.html"];
-//    [self downloadDataChannels:[NSURL URLWithString:kChannelsLink]];
     [self.appManager checkingForLoadingChennelContent];
     
     self.myTable = [[UITableView alloc] initWithFrame:self.view.frame];
@@ -71,6 +69,9 @@ static NSString *const kChannelsLink = @"https://news.tut.by/rss.html";
     [self.myTable setDataSource:self];
     [self.myTable registerClass:[FirstCell class] forCellReuseIdentifier:kCellId];
     [self.view addSubview:self.myTable];
+    [self setUpContraintsForTable];
+    
+    self.navigationItem.title = @"RSS - reader" ;
 }
 
 #pragma mark - APPManager delegate method(download complition)
@@ -95,18 +96,13 @@ static NSString *const kChannelsLink = @"https://news.tut.by/rss.html";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     FirstCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellId forIndexPath:indexPath];
     Channel *channel = [[self.channels objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-    [cell configureCellWithTitleText:channel.name];
-    
+    cell.textLabel.text = channel.name;
+    cell.imageView.image = [UIImage imageNamed:@"rss"];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     Channel *channel = [self.channels objectAtIndex:indexPath.section][indexPath.row];
-    NSLog(@"Channel COUNT %lu", [self.channels[indexPath.section] count]);
-    NSLog(@"Ind Path %@", indexPath);
-    
-    NSLog(@"%@", [[self.channels objectAtIndex:indexPath.section] class]);
-    NSLog(@"%@", channel);
     NSString *strUrl = channel.url;
     ArticlesViewController *articleVC = [[ArticlesViewController alloc] init];
     [articleVC setStringUrl:strUrl];
@@ -114,23 +110,34 @@ static NSString *const kChannelsLink = @"https://news.tut.by/rss.html";
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
+/*
+ NSLog(@"Channel COUNT %lu", [self.channels[indexPath.section] count]);
+ NSLog(@"Ind Path %@", indexPath);
+ 
+ NSLog(@"%@", [[self.channels objectAtIndex:indexPath.section] class]);
+ NSLog(@"%@", channel);
+ */
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 40)];
-    [headerView setBackgroundColor:UIColor.grayColor];
+    UILabel *headerView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 40)];
+    [headerView setTextAlignment:NSTextAlignmentCenter];
+    [headerView setBackgroundColor:UIColor.whiteColor];
+    [headerView.layer setBorderWidth:3];
+    [headerView.layer setBackgroundColor:UIColor.blackColor.CGColor];
     [headerView.layer setCornerRadius:20];
-    [tableView setTableHeaderView:headerView];
-    
-    UILabel *lbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 40)];
-    [lbl setBackgroundColor:UIColor.whiteColor];
-    [lbl.layer setCornerRadius:20];
-    lbl.text = self.headers[section];
-    [headerView addSubview:lbl];
-    return lbl;
+    [headerView setText:self.headers[section]];
+//    [tableView setTableHeaderView:headerView];
+    return headerView;
 }
 
+//- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+//    return self.headers[section];
+//}
+
+
+
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return self.view.frame.size.height / 20;
+    return self.view.frame.size.height / 13;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
@@ -138,7 +145,16 @@ static NSString *const kChannelsLink = @"https://news.tut.by/rss.html";
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-    return self.view.frame.size.height / 20;
+        return self.view.frame.size.height / 13;
+}
+
+- (void)setUpContraintsForTable {
+    [self.myTable setTranslatesAutoresizingMaskIntoConstraints:NO];
+    NSLayoutConstraint *top = [self.myTable.topAnchor constraintEqualToSystemSpacingBelowAnchor:self.view.safeAreaLayoutGuide.topAnchor multiplier:0];
+    NSLayoutConstraint *leading = [self.myTable.leadingAnchor constraintEqualToSystemSpacingAfterAnchor:self.view.safeAreaLayoutGuide.leadingAnchor multiplier:0];
+    NSLayoutConstraint *botton = [self.myTable.bottomAnchor constraintEqualToSystemSpacingBelowAnchor:self.view.safeAreaLayoutGuide.bottomAnchor multiplier:0];
+    NSLayoutConstraint *trailing = [self.myTable.trailingAnchor constraintEqualToSystemSpacingAfterAnchor:self.view.safeAreaLayoutGuide.trailingAnchor multiplier:0];
+    [NSLayoutConstraint activateConstraints:@[top, leading, botton, trailing]];
 }
 
 

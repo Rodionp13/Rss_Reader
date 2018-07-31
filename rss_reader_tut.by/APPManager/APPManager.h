@@ -10,19 +10,17 @@
 
 @protocol APPManagerDelegate
 @optional
-
 - (void) complitionLoadingChannelsData:(NSDictionary *)channelsData;
-//- (void) updateTableView:(NSA
 @end
 
-//@protocol APPManagerCoreDateDelegate
-//
-//- (NSDictionary *) parseMOinToObjects:(NSArray *)managedObjects;
-//@end
 
 @interface APPManager : NSObject
 @property(weak, nonatomic) id <APPManagerDelegate> delegate;
-//@property(strong, nonatomic) id <APPManagerCoreDateDelegate> cdDelegate;
 
 - (void)checkingForLoadingChennelContent;
 @end
+
+//@property(strong, nonatomic) id <APPManagerCoreDateDelegate> cdDelegate;
+//@protocol APPManagerCoreDateDelegate
+//- (NSDictionary *) parseMOinToObjects:(NSArray *)managedObjects;
+//@end

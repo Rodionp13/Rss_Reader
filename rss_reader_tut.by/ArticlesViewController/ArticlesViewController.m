@@ -44,7 +44,7 @@ static NSString *const kMediaTypeMp4 = @"mp4";
     self.tableView.dataSource = self;
     [self.tableView registerClass:[ArticleCell class] forCellReuseIdentifier:kCellId2];
     [self.view addSubview:self.tableView];
-    
+    [self setUpContraintsForTable];
     //fetching data for articles
     [self download];
 }
@@ -77,7 +77,7 @@ static NSString *const kMediaTypeMp4 = @"mp4";
 
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return self.view.frame.size.height / 15;
+    return self.view.frame.size.height / 7;
 }
 
 
@@ -95,13 +95,6 @@ static NSString *const kMediaTypeMp4 = @"mp4";
             if([self.xmlParser parse]) {
                 NSLog(@"COMPLETE");
             }
-//            else {
-//                NSLog(@"Fail");
-//            }
-//            NSLog(@"%lu", self.articles.count);
-//            for(Article *art in self.articles) {
-//                NSLog(@"%@", [art description]);
-//            }
         }
     }];
 }
@@ -177,11 +170,18 @@ static NSString *const kMediaTypeMp4 = @"mp4";
 - (void)parserDidEndDocument:(NSXMLParser *)parser {
     NSArray *articlesObjects = [self parseArticlesDataIntoArticlesObjects:self.articles tableView:self.tableView];
     [self setArticles:articlesObjects.mutableCopy];
-
 //    dispatch_async(dispatch_get_main_queue(), ^{
 //        [self.tableView reloadData];
 //    });
-//    NSLog(@"parserDidEndDocument");
+}
+
+- (void)setUpContraintsForTable {
+    [self.tableView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    NSLayoutConstraint *top = [self.tableView.topAnchor constraintEqualToSystemSpacingBelowAnchor:self.view.safeAreaLayoutGuide.topAnchor multiplier:0];
+    NSLayoutConstraint *leading = [self.tableView.leadingAnchor constraintEqualToSystemSpacingAfterAnchor:self.view.safeAreaLayoutGuide.leadingAnchor multiplier:0];
+    NSLayoutConstraint *botton = [self.tableView.bottomAnchor constraintEqualToSystemSpacingBelowAnchor:self.view.safeAreaLayoutGuide.bottomAnchor multiplier:0];
+    NSLayoutConstraint *trailing = [self.tableView.trailingAnchor constraintEqualToSystemSpacingAfterAnchor:self.view.safeAreaLayoutGuide.trailingAnchor multiplier:0];
+    [NSLayoutConstraint activateConstraints:@[top, leading, botton, trailing]];
 }
 
 

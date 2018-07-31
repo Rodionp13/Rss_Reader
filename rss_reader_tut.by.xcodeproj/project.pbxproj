@@ -128,8 +128,6 @@
 		3D03B1D821089ACC005F1029 = {
 			isa = PBXGroup;
 			children = (
-				CED6EB9A210FA7BF003A72C0 /* APPManager */,
-				CED6EB95210FA43F003A72C0 /* CDEntities */,
 				3D03B1E321089ACC005F1029 /* rss_reader_tut.by */,
 				3D03B1FF21089ACD005F1029 /* rss_reader_tut.byTests */,
 				3D03B20A21089ACD005F1029 /* rss_reader_tut.byUITests */,
@@ -156,7 +154,8 @@
 				3D99E6742108D481008E3BA1 /* ChannelsViewController */,
 				3D99E6732108D46B008E3BA1 /* ArticlesViewController */,
 				3D99E6752108D499008E3BA1 /* Channel */,
-				CEF4C405210A869C007BA9DA /* Article */,
+				CED6EB9A210FA7BF003A72C0 /* APPManager */,
+				CED6EB95210FA43F003A72C0 /* CDManager */,
 				CECB0B82210F7C220093D738 /* Download */,
 				3D99E6762108D4A3008E3BA1 /* HTMLParser */,
 				3D03B1EA21089ACC005F1029 /* Main.storyboard */,
@@ -224,6 +223,7 @@
 			children = (
 				3D03B22021089B2F005F1029 /* Channel.h */,
 				3D03B22121089B2F005F1029 /* Channel.m */,
+				CEF4C405210A869C007BA9DA /* Article */,
 			);
 			path = Channel;
 			sourceTree = "<group>";
@@ -269,23 +269,23 @@
 			path = Download;
 			sourceTree = "<group>";
 		};
-		CED6EB95210FA43F003A72C0 /* CDEntities */ = {
+		CED6EB95210FA43F003A72C0 /* CDManager */ = {
 			isa = PBXGroup;
 			children = (
-				CED6EB96210FA465003A72C0 /* CDManager */,
+				CED6EB96210FA465003A72C0 /* CD */,
 				CEB2A21F2110531D00047E33 /* ChannelMO */,
 				CEB2A2202110532B00047E33 /* ArticleMO */,
 			);
-			path = CDEntities;
+			path = CDManager;
 			sourceTree = "<group>";
 		};
-		CED6EB96210FA465003A72C0 /* CDManager */ = {
+		CED6EB96210FA465003A72C0 /* CD */ = {
 			isa = PBXGroup;
 			children = (
 				CED6EB97210FA49D003A72C0 /* CDManager.h */,
 				CED6EB98210FA49D003A72C0 /* CDManager.m */,
 			);
-			path = CDManager;
+			path = CD;
 			sourceTree = "<group>";
 		};
 		CED6EB9A210FA7BF003A72C0 /* APPManager */ = {

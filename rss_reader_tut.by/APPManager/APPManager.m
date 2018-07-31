@@ -63,16 +63,22 @@ static NSString *const kDataBaseData = @"DataBaseData";
                     [strongSelf.cdManager addNewRecordsToDB:@{kHeaders:headers, kChannels:@[newChannels]}];//@[newChannels] as other data sourse comes as @[@[]];
                     //                NSLog(@"COUNT OF NEW CHANNELS = %lu", newChannels.count);
                 });
-            }];}
+            }];
+           }
+        
         } else {
+            if([AppDelegate isNetworkAvailable]) {
             [self firstDownloadContent:url withComplition:^(NSDictionary *channelsAndHeaders) {
+                APPManager *__weak weakSelf = self;
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.delegate complitionLoadingChannelsData:channelsAndHeaders];
-                [self.cdManager addNewRecordsToDB:channelsAndHeaders];
+                APPManager *__strong strongSelf = weakSelf;
+                [strongSelf.delegate complitionLoadingChannelsData:channelsAndHeaders];
+                [strongSelf.cdManager addNewRecordsToDB:channelsAndHeaders];
                 //WHy WHy Why not???????
                 //[self.cdDelegate parseChannelsDataToChannelsMOAndAddRecordsToDB: channelsAndHeaders];
-            });
-        }];
+                });
+              }];
+            }
     }
 }
 
@@ -90,7 +96,6 @@ static NSString *const kDataBaseData = @"DataBaseData";
             } else {NSLog(@"CHANNEL is alraady in Db, %@", channel);}
         }
     }
-    
     return newChannelsToAddinDb.copy;
 }
 
@@ -108,41 +113,4 @@ static NSString *const kDataBaseData = @"DataBaseData";
     }];
 }
 
-
 @end
-
-
-
-
-
-//check for CD objects
-//    NSLog(@"%lu", dataFromDB.count);
-//    for(ChannelMO *mo in dataFromDB) {
-//        NSLog(@"%@", mo.channelGroup);
-//    }
-
-
-
-
-
-//- (NSArray*)compareDataFromDbAndDownloadedData:(NSDictionary*)dataToCompare {
-//    NSMutableArray *result = [NSMutableArray array];
-//    NSArray *downloaded = [dataToCompare valueForKey:kDownloadedData];
-//    NSArray *dataBase = [dataToCompare valueForKey:kDataBaseData];
-//    BOOL flag = NO;
-//    int c = 0;
-//    for(int i = 0; i < downloaded.count; i++) {
-//        Channel *channel = [downloaded objectAtIndex:i];
-//        for(int j = 0; j < dataBase.count; j++) {
-//            ChannelMO *channelMO = [dataBase objectAtIndex:j];
-//            if([[channel name] isEqualToString:[channelMO name]] && [[channel url] isEqualToString:[channelMO url]]) {
-//                flag = YES;
-//                c += 1;
-//            }
-//            if((i+1) == dataBase.count && c == 0) {
-//                [result addObject:channel];
-//            }
-//        }
-//    }
-//    return result.copy;
-//}
