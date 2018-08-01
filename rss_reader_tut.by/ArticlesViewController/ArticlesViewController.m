@@ -20,6 +20,7 @@ static NSString *const kMediaTypeMp4 = @"mp4";
 @interface ArticlesViewController ()
 @property(strong, nonatomic) UITableView *tableView;
 @property(strong, nonatomic) NSMutableArray *articles;
+@property(strong, nonatomic) NSMutableArray *articlesData;//test
 
 @property(strong, nonatomic) NSXMLParser *xmlParser;
 @property(strong, nonatomic) NSArray *tags;
@@ -37,6 +38,7 @@ static NSString *const kMediaTypeMp4 = @"mp4";
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.articles = [[NSMutableArray alloc] init];
+    self.articlesData = [[NSMutableArray alloc] init];
     
     //tableview initialization
     self.tableView = [[UITableView alloc] initWithFrame:self.view.frame];
@@ -59,15 +61,15 @@ static NSString *const kMediaTypeMp4 = @"mp4";
     ArticleCell *cell = [[tableView dequeueReusableCellWithIdentifier:kCellId2 forIndexPath:indexPath] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:kCellId2];
     Article *article = [self.articles objectAtIndex:indexPath.row];
     
-    UIImage *icon;
-    if(article.originalIconUrl != nil) {
-        NSData *data = [NSData dataWithContentsOfURL:article.originalIconUrl];
-        icon = [UIImage imageWithData:data];
-    } else {
-        icon = [UIImage imageNamed:@"rss"];
-    }
+//    UIImage *icon;
+//    if(article.icon != nil) {
+////        NSData *data = [NSData dataWithContentsOfURL:article.originalIconUrl];
+////        icon = [UIImage imageWithData:data];
+//    } else {
+//        icon = [UIImage imageNamed:@"rss"];
+//    }
     
-    cell.imageView.image = icon;
+    cell.imageView.image = article.icon;
     [cell.textLabel setText:article.title];
     [cell.detailTextLabel setText:article.articleDescr];
     
@@ -148,8 +150,10 @@ static NSString *const kMediaTypeMp4 = @"mp4";
         [self.tempDict setValue:arrOfVideoContent forKey:kVideoContent];
         
         NSDictionary *dictToAdd = [[NSDictionary alloc] initWithDictionary:self.tempDict.copy];
-        [self.articles addObject:dictToAdd];
+        [self.articlesData addObject:dictToAdd];
+//        [self.articles addObject:dictToAdd];
         
+        [self.tempDict removeAllObjects];//?????????????????!!!!!!!!!!!!!
         [self.arrOfImageContent removeAllObjects];
         [self.arrOfVideoContent removeAllObjects];
         self.inItem = NO;
@@ -166,13 +170,11 @@ static NSString *const kMediaTypeMp4 = @"mp4";
     [self.foundValue setString:@""];
 }
 
-
 - (void)parserDidEndDocument:(NSXMLParser *)parser {
-    NSArray *articlesObjects = [self parseArticlesDataIntoArticlesObjects:self.articles tableView:self.tableView];
-    [self setArticles:articlesObjects.mutableCopy];
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        [self.tableView reloadData];
-//    });
+    NSMutableArray *arrToPass = [NSArray arrayWithArray:self.articlesData].mutableCopy;
+    NSArray *articlesObjects = [self parseArticlesDataIntoArticlesObjects:arrToPass tableView:self.tableView];
+    self.articles = articlesObjects.mutableCopy;
+    [self.articlesData removeAllObjects];
 }
 
 - (void)setUpContraintsForTable {

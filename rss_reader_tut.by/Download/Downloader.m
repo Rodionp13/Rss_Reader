@@ -10,23 +10,25 @@
 
 @implementation Downloader
 
-+ (void)downloadTaskWith:(NSURL *)url handler:(void(^)(NSURL *destinationUrl))complition {
++ (NSURL*)downloadTaskWith:(NSURL *)url handler:(void(^)(NSURL *destinationUrl))complition {
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     [request setHTTPMethod:@"GET"];
     
     NSURLSession *session = [NSURLSession sharedSession];
-    
+    __block NSURL *destinationUrl;
     NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithRequest:request completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
         if(location != nil) {
-            NSURL *destinationUrl = [self copyItem:location];
+            destinationUrl = [self copyItem:location];
             complition(destinationUrl);
         } else {
             complition(nil);
         }
-        
     }];
+    
     [downloadTask resume];
+    
+    return destinationUrl;
 }
 
 + (NSURL *)copyItem:(NSURL *)location {

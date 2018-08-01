@@ -17,7 +17,7 @@
 static NSString *const kCellId = @"myCell";
 static NSString *const kChannelsLink = @"https://news.tut.by/rss.html";
 
-@interface ChannelsViewController ()
+@interface ChannelsViewController () <UITableViewDataSource, UITableViewDelegate, APPManagerDelegate>
 @property(strong, nonatomic) NSMutableArray *headers;
 @property(strong, nonatomic) NSMutableArray *channels;
 @property(strong, nonatomic) NSMutableArray *freshNewsForAllArticles;
@@ -58,8 +58,7 @@ static NSString *const kChannelsLink = @"https://news.tut.by/rss.html";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSLog(@"HELLOWWWWWWWWWW");
-    self.parser = [[HTMLParser alloc] init];
+//    self.parser = [[HTMLParser alloc] init];
     self.appManager = [[APPManager alloc] init];
     self.appManager.delegate = self;
     [self.appManager checkingForLoadingChennelContent];

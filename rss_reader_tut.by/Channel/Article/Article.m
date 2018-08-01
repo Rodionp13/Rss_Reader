@@ -10,15 +10,17 @@
 
 @implementation Article
 
-- (id)initWithTitle:(NSString *)title iconUrlStr:(NSString *)iconUrlString iconPathComponent:(NSString *)iconPathComponent date:(NSString *)date description:(NSString *)description link:(NSString *)link images:(NSMutableArray *)images andVideoContent:(NSMutableArray *)videoContent {
+- (id)initWithTitle:(NSString *)title iconUrlStr:(NSString *)iconUrlString icon:(UIImage *)icon date:(NSString *)date description:(NSString *)description link:(NSString *)link images:(NSMutableArray *)images andVideoContent:(NSMutableArray *)videoContent {
     self = [super init];
     
     if(self) {
         _title = title;
+//        if(iconUrlString != nil) {
         _iconUrl = [NSURL URLWithString:iconUrlString];
-        if(iconPathComponent != nil) {
-            _originalIconUrl = [NSURL URLWithString:iconPathComponent];
-        } else {_originalIconUrl = nil;}
+//        } else {/*NSAssert(errno, @"passing iconUrlString is nil see init of Article!!!!!!!");*/}
+        if(icon != nil) {
+            _icon = icon ;//1)iconPathComponent   2)[NSURL URLWithString:iconPathComponent]
+        } else {NSAssert(errno, @"passing iconPathComponent is nil see init of Article!!!!!!!");}
         _date = date;
         _articleDescr = description;
         _articleLink = [NSURL URLWithString:link];

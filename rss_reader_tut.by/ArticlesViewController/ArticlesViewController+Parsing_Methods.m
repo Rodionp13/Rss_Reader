@@ -16,34 +16,31 @@
     for(int i = 0; i < fetchedDataForArticles.count; i++) {
         NSDictionary *articleObj = [fetchedDataForArticles objectAtIndex:i];
         NSDictionary *dictWithIconUrlAndArtDescription = [self parseStringFromDescriptionTag:[articleObj valueForKey:kDescription]];
-        NSString *strUrl = [dictWithIconUrlAndArtDescription valueForKey:@"url"];
+        NSString *strIconUrl = [dictWithIconUrlAndArtDescription valueForKey:@"url"];
         NSString *artDescription = [dictWithIconUrlAndArtDescription valueForKey:@"shortDescription"];
-        if(strUrl == nil) {
-            strUrl = @"";
-        } else if(artDescription == nil) {
+        if(artDescription == nil) {
             artDescription = @"NO Description";
-        } else if(strUrl == nil && artDescription == nil) {
-            strUrl = @""; artDescription = @"NO Description";
         }
         
         //Initialization of artilce instance
-        Article *article = [[Article alloc] initWithTitle:[articleObj valueForKey:kTitle] iconUrlStr:strUrl iconPathComponent:nil date:[articleObj valueForKey:kPubDate] description:artDescription link:[articleObj valueForKey:kLink] images:[articleObj valueForKey:kMediaContent] andVideoContent:[articleObj valueForKey:kVideoContent]];
+        UIImage *icon = [UIImage imageNamed:@"rss"];
+        Article *article = [[Article alloc] initWithTitle:[articleObj valueForKey:kTitle] iconUrlStr:strIconUrl icon:icon date:[articleObj valueForKey:kPubDate] description:artDescription link:[articleObj valueForKey:kLink] images:[articleObj valueForKey:kMediaContent] andVideoContent:[articleObj valueForKey:kVideoContent]];
         
         if(article.iconUrl != nil) {
-        [Downloader downloadTaskWith:article.iconUrl handler:^(NSURL *destinationUrl) {
+        [Downloader downloadTaskWith:article.iconUrl handler:^(NSURL *destinationUrl) {//article.iconUrl
             if(destinationUrl != nil) {
-            article.originalIconUrl = destinationUrl;
+            article.icon = [UIImage imageWithData:[NSData dataWithContentsOfURL:destinationUrl]];
+                
                 if(i == fetchedDataForArticles.count - 1) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [tableView reloadData];
                 }); }
-            } }];
-        } else {
-            NSAssert(errno, @"article.iconUrl ====== NILLLL in downloadTaskWith Method");
-        }
-        
+            }
+             }];
+        }// else {NSAssert(errno, @"article.iconUrl ====== NILLLL in downloadTaskWith Method");}
         [mutArticlse addObject:article];
     }
+    
     return mutArticlse.copy;
 }
 

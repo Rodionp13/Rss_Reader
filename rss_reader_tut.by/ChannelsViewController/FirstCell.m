@@ -20,9 +20,6 @@
 }
 
 - (void) configureCellWithTitleText:(NSString *)textLabel {
-    if(self.myImageView != nil) {
-        [self deleteAll];
-    }
     [self configureCellImage];
 //    [self configureCellLabel:textLabel];
 }

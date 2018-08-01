@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "APPManager.h"
 
-@interface ChannelsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, APPManagerDelegate>
+@interface ChannelsViewController : UIViewController
 
 @end

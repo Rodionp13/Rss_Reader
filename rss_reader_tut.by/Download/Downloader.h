@@ -10,6 +10,6 @@
 
 @interface Downloader : NSObject
 
-+ (void)downloadTaskWith:(NSURL *)url handler:(void(^)(NSURL *destinationUrl))complition;
++ (NSURL*)downloadTaskWith:(NSURL *)url handler:(void(^)(NSURL *destinationUrl))complition;
 + (NSURL *)copyItem:(NSURL *)location;
 @end
