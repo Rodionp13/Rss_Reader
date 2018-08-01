@@ -22,7 +22,7 @@ static NSString *const kMediaContent = @"media:content";
 static NSString *const kPubDate = @"pubDate";
 static NSString *const kVideoContent = @"video";
 
-@interface ArticlesViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,NSXMLParserDelegate>
+@interface ArticlesViewController : UIViewController 
 @property(strong, nonatomic) NSString *stringUrl;
 
 @end

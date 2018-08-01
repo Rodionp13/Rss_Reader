@@ -11,8 +11,9 @@
 #import "AppDelegate.h"
 #import "Channel.h"
 #import "FirstCell.h"
+#import "CDManager.h"
 #import "HTMLParser.h"
-#import "Downloader.h"
+#import "APPManager.h"
 
 static NSString *const kCellId = @"myCell";
 static NSString *const kChannelsLink = @"https://news.tut.by/rss.html";
@@ -21,7 +22,7 @@ static NSString *const kChannelsLink = @"https://news.tut.by/rss.html";
 @property(strong, nonatomic) NSMutableArray *headers;
 @property(strong, nonatomic) NSMutableArray *channels;
 @property(strong, nonatomic) NSMutableArray *freshNewsForAllArticles;
-@property(strong, nonatomic) HTMLParser *parser;
+//@property(strong, nonatomic) HTMLParser *parser;
 @property(strong, nonatomic) APPManager *appManager;
 
 @property(strong, nonatomic) NSURL *destinationURL;
@@ -58,7 +59,6 @@ static NSString *const kChannelsLink = @"https://news.tut.by/rss.html";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-//    self.parser = [[HTMLParser alloc] init];
     self.appManager = [[APPManager alloc] init];
     self.appManager.delegate = self;
     [self.appManager checkingForLoadingChennelContent];

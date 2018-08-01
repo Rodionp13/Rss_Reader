@@ -9,6 +9,6 @@
 #import "ArticlesViewController.h"
 
 @interface ArticlesViewController (Parsing_Methods)
-
-- (NSArray *)parseArticlesDataIntoArticlesObjects:(NSMutableArray *)fetchedDataForArticles tableView:(UITableView*)tableView;
+//                                                NSMutableArray*
+- (NSArray *)parseArticlesDataIntoArticlesObjects:(NSArray*)fetchedDataForArticles tableView:(UITableView*)tableView;
 @end

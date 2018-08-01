@@ -19,6 +19,7 @@
 		3D03B22221089B2F005F1029 /* HTMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D03B21C21089B2E005F1029 /* HTMLParser.m */; };
 		3D03B22321089B2F005F1029 /* FirstCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D03B21D21089B2E005F1029 /* FirstCell.m */; };
 		3D03B22421089B2F005F1029 /* Channel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D03B22121089B2F005F1029 /* Channel.m */; };
+		3D11FA9921120B5D0031C8B6 /* MyXMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D11FA9821120B5D0031C8B6 /* MyXMLParser.m */; };
 		3D72CEC8210B2DD70044C0D5 /* ArticlesViewController+Parsing_Methods.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D72CEC7210B2DD70044C0D5 /* ArticlesViewController+Parsing_Methods.m */; };
 		3D72CECE210B50230044C0D5 /* ArticleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D72CECD210B50230044C0D5 /* ArticleCell.m */; };
 		3D99E6722108D462008E3BA1 /* ArticlesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D99E6712108D462008E3BA1 /* ArticlesViewController.m */; };
@@ -74,6 +75,8 @@
 		3D03B21F21089B2F005F1029 /* FirstCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstCell.h; sourceTree = "<group>"; };
 		3D03B22021089B2F005F1029 /* Channel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Channel.h; sourceTree = "<group>"; };
 		3D03B22121089B2F005F1029 /* Channel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Channel.m; sourceTree = "<group>"; };
+		3D11FA9721120B5D0031C8B6 /* MyXMLParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyXMLParser.h; sourceTree = "<group>"; };
+		3D11FA9821120B5D0031C8B6 /* MyXMLParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyXMLParser.m; sourceTree = "<group>"; };
 		3D72CEC6210B2DD70044C0D5 /* ArticlesViewController+Parsing_Methods.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ArticlesViewController+Parsing_Methods.h"; sourceTree = "<group>"; };
 		3D72CEC7210B2DD70044C0D5 /* ArticlesViewController+Parsing_Methods.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ArticlesViewController+Parsing_Methods.m"; sourceTree = "<group>"; };
 		3D72CECC210B50230044C0D5 /* ArticleCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ArticleCell.h; sourceTree = "<group>"; };
@@ -203,6 +206,8 @@
 				3D72CECD210B50230044C0D5 /* ArticleCell.m */,
 				3D72CEC6210B2DD70044C0D5 /* ArticlesViewController+Parsing_Methods.h */,
 				3D72CEC7210B2DD70044C0D5 /* ArticlesViewController+Parsing_Methods.m */,
+				3D11FA9721120B5D0031C8B6 /* MyXMLParser.h */,
+				3D11FA9821120B5D0031C8B6 /* MyXMLParser.m */,
 			);
 			path = ArticlesViewController;
 			sourceTree = "<group>";
@@ -450,6 +455,7 @@
 				3D03B22321089B2F005F1029 /* FirstCell.m in Sources */,
 				CED6EB99210FA49D003A72C0 /* CDManager.m in Sources */,
 				3D03B1F721089ACD005F1029 /* main.m in Sources */,
+				3D11FA9921120B5D0031C8B6 /* MyXMLParser.m in Sources */,
 				CECB0B85210F7CBA0093D738 /* rss_reader_tut_by.xcdatamodeld in Sources */,
 				CE2BA8EC21105A5800FB422F /* ChannelMO+CoreDataProperties.m in Sources */,
 				3D03B1E621089ACC005F1029 /* AppDelegate.m in Sources */,

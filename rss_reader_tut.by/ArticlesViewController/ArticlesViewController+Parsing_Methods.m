@@ -10,8 +10,8 @@
 #import "Downloader.h"
 
 @implementation ArticlesViewController (Parsing_Methods)
-
-- (NSArray *)parseArticlesDataIntoArticlesObjects:(NSMutableArray *)fetchedDataForArticles tableView:(UITableView*)tableView {
+  //                                              //NSMutableArray*
+- (NSArray *)parseArticlesDataIntoArticlesObjects:(NSArray *)fetchedDataForArticles tableView:(UITableView*)tableView {
     NSMutableArray *mutArticlse = [NSMutableArray array];
     for(int i = 0; i < fetchedDataForArticles.count; i++) {
         NSDictionary *articleObj = [fetchedDataForArticles objectAtIndex:i];

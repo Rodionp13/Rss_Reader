@@ -19,6 +19,9 @@ static NSString *const kVideoContentURLAndNameEnt = @"VideoContentURLAndNameEnt"
 
 //entity attributes && relationshops
 static NSString *const kChannelGroup = @"channelGroup";
+static NSString *const kName = @"name";
+static NSString *const kUrl = @"url";
+static NSString *const kArticles = @"articles";
 
 
 @interface CDManager : NSObject

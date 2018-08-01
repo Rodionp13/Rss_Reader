@@ -8,6 +8,8 @@
 
 #import "ArticlesViewController.h"
 #import "ArticlesViewController+Parsing_Methods.h"
+#import "CDManager.h"
+#import "MyXMLParser.h"
 
 static NSString *const kCellId2 = @"myCell2";
 
@@ -17,12 +19,12 @@ static NSString *const kMediaTypePng = @"png";
 static NSString *const kMediaTypeMp4 = @"mp4";
 
 
-@interface ArticlesViewController ()
+@interface ArticlesViewController () <UITableViewDataSource,UITableViewDelegate,NSXMLParserDelegate, MyXMLParseDelegate>
 @property(strong, nonatomic) UITableView *tableView;
 @property(strong, nonatomic) NSMutableArray *articles;
 @property(strong, nonatomic) NSMutableArray *articlesData;//test
 
-@property(strong, nonatomic) NSXMLParser *xmlParser;
+//@property(strong, nonatomic) NSXMLParser *xmlParser;
 @property(strong, nonatomic) NSArray *tags;
 @property(strong, nonatomic) NSMutableArray *arrOfImageContent;
 @property(strong, nonatomic) NSMutableArray *arrOfVideoContent;
@@ -37,6 +39,7 @@ static NSString *const kMediaTypeMp4 = @"mp4";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     self.articles = [[NSMutableArray alloc] init];
     self.articlesData = [[NSMutableArray alloc] init];
     
@@ -82,6 +85,11 @@ static NSString *const kMediaTypeMp4 = @"mp4";
     return self.view.frame.size.height / 7;
 }
 
+- (void)parseFetchedDataIntoArticlesObjects:(NSArray *)fetchedArticleData {
+    NSArray *articles = [self parseArticlesDataIntoArticlesObjects:fetchedArticleData tableView:self.tableView];
+    self.articles = [articles mutableCopy];
+}
+
 
 
 
@@ -90,92 +98,97 @@ static NSString *const kMediaTypeMp4 = @"mp4";
 - (void)download {
     NSURL *myUrl = [NSURL URLWithString:self.stringUrl];
 
+//    [Downloader downloadTaskWith:myUrl handler:^(NSURL *destinationUrl) {
+//        if(destinationUrl != nil) {
+//            NSXMLParser *xmlParser = [[NSXMLParser alloc] initWithContentsOfURL:destinationUrl];
+//            [xmlParser setDelegate:self];
+//            if([xmlParser parse]) {
+//                NSLog(@"Parse started");
+//            }
+//        }
+//    }];
     [Downloader downloadTaskWith:myUrl handler:^(NSURL *destinationUrl) {
-        if(destinationUrl != nil) {
-            self.xmlParser = [[NSXMLParser alloc] initWithContentsOfURL:destinationUrl];
-            [self.xmlParser setDelegate:self];
-            if([self.xmlParser parse]) {
-                NSLog(@"COMPLETE");
-            }
-        }
+        MyXMLParser *parser = [[MyXMLParser alloc] initWithUrl:[NSURL URLWithString:self.stringUrl]];
+        parser.delegate = self;
+        if(![parser.myXMLParser parse]) {NSAssert(errno, @"Some problems with parser!!!ArticleVC respone");} else {NSLog(@"PARSING STARTED ARTICEVC response");}
     }];
 }
-
-#pragma mark - methods for XML-parsing
-
-- (void)parserDidStartDocument:(NSXMLParser *)parser {
-    self.tags = @[kTitle, kLink, kDescription, kPubDate];
-    self.foundValue = [[NSMutableString alloc] init];
-    self.arrOfImageContent = [[NSMutableArray alloc] init];
-    self.arrOfVideoContent = [[NSMutableArray alloc] init];
-//    NSLog(@"parserDidStartDocument");
-}
-
-- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary<NSString *,NSString *> *)attributeDict {
-    if([elementName isEqualToString:kItem]) {
-        self.inItem = YES;
-        self.tempDict = [[NSMutableDictionary alloc] init];
-    }
-    
-    if([elementName containsString:kMediaContent] && self.inItem == YES) {
-        NSString *mediaContentType = [attributeDict valueForKey:kMediaContentType];
-        NSString *mediaContentUrl = [attributeDict valueForKey:@"url"];
-        if([mediaContentType containsString:kMediaTypeJpeg] || [mediaContentType containsString:kMediaTypePng]) {
-        [self.arrOfImageContent addObject:mediaContentUrl];
-        }
-        else if([mediaContentType containsString:kMediaTypeMp4]) {
-            [self.arrOfVideoContent addObject:mediaContentUrl];
-        }
-    }
-    
-    self.currentString = elementName;
-//    NSLog(@"didStartElement ---> %@", elementName);
-}
-
-- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
-    for(NSString *tag in self.tags) {
-        if([self.currentString isEqualToString:tag]) {
-            NSString *trimmingStr = [string stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\t\n"]];
-                [self.foundValue appendString:trimmingStr];
-        }
-    }
-//    NSLog(@"foundCharacters ---> %@", string);
-}
-
-- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
-    if([elementName isEqualToString:kItem]) {
-        NSArray *arrOfImageContent = [[NSArray alloc] initWithArray:[self.arrOfImageContent copy]];
-        NSArray *arrOfVideoContent = [[NSArray alloc] initWithArray:[self.arrOfVideoContent copy]];
-        [self.tempDict setValue:arrOfImageContent forKey:kMediaContent];
-        [self.tempDict setValue:arrOfVideoContent forKey:kVideoContent];
-        
-        NSDictionary *dictToAdd = [[NSDictionary alloc] initWithDictionary:self.tempDict.copy];
-        [self.articlesData addObject:dictToAdd];
-//        [self.articles addObject:dictToAdd];
-        
-        [self.tempDict removeAllObjects];//?????????????????!!!!!!!!!!!!!
-        [self.arrOfImageContent removeAllObjects];
-        [self.arrOfVideoContent removeAllObjects];
-        self.inItem = NO;
-    } else {
-        for(NSString *tag in self.tags) {
-            if([elementName isEqualToString:tag]) {
-                
-                NSString *strToAdd = [[NSString alloc] initWithString:self.foundValue];
-                [self.tempDict setValue:strToAdd forKey:elementName];
-            }
-        }
-    }
-//    NSLog(@"didEndElement ---> %@", elementName);
-    [self.foundValue setString:@""];
-}
-
-- (void)parserDidEndDocument:(NSXMLParser *)parser {
-    NSMutableArray *arrToPass = [NSArray arrayWithArray:self.articlesData].mutableCopy;
-    NSArray *articlesObjects = [self parseArticlesDataIntoArticlesObjects:arrToPass tableView:self.tableView];
-    self.articles = articlesObjects.mutableCopy;
-    [self.articlesData removeAllObjects];
-}
+//
+//#pragma mark - methods for XML-parsing
+//
+//- (void)parserDidStartDocument:(NSXMLParser *)parser {
+//    self.tags = @[kTitle, kLink, kDescription, kPubDate];
+//    self.foundValue = [[NSMutableString alloc] init];
+//    self.arrOfImageContent = [[NSMutableArray alloc] init];
+//    self.arrOfVideoContent = [[NSMutableArray alloc] init];
+////    NSLog(@"parserDidStartDocument");
+//}
+//
+//- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary<NSString *,NSString *> *)attributeDict {
+//    if([elementName isEqualToString:kItem]) {
+//        self.inItem = YES;
+//        self.tempDict = [[NSMutableDictionary alloc] init];
+//    }
+//
+//    if([elementName containsString:kMediaContent] && self.inItem == YES) {
+//        NSString *mediaContentType = [attributeDict valueForKey:kMediaContentType];
+//        NSString *mediaContentUrl = [attributeDict valueForKey:@"url"];
+//        if([mediaContentType containsString:kMediaTypeJpeg] || [mediaContentType containsString:kMediaTypePng]) {
+//        [self.arrOfImageContent addObject:mediaContentUrl];
+//        }
+//        else if([mediaContentType containsString:kMediaTypeMp4]) {
+//            [self.arrOfVideoContent addObject:mediaContentUrl];
+//        }
+//    }
+//
+//    self.currentString = elementName;
+////    NSLog(@"didStartElement ---> %@", elementName);
+//}
+//
+//- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
+//    for(NSString *tag in self.tags) {
+//        if([self.currentString isEqualToString:tag]) {
+//            NSString *trimmingStr = [string stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\t\n"]];
+//                [self.foundValue appendString:trimmingStr];
+//        }
+//    }
+////    NSLog(@"foundCharacters ---> %@", string);
+//}
+//
+//- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
+//    if([elementName isEqualToString:kItem]) {
+//        NSArray *arrOfImageContent = [[NSArray alloc] initWithArray:[self.arrOfImageContent copy]];
+//        NSArray *arrOfVideoContent = [[NSArray alloc] initWithArray:[self.arrOfVideoContent copy]];
+//        [self.tempDict setValue:arrOfImageContent forKey:kMediaContent];
+//        [self.tempDict setValue:arrOfVideoContent forKey:kVideoContent];
+//
+//        NSDictionary *dictToAdd = [[NSDictionary alloc] initWithDictionary:self.tempDict.copy];
+//        [self.articlesData addObject:dictToAdd];
+////        [self.articles addObject:dictToAdd];
+//
+//        [self.tempDict removeAllObjects];//?????????????????!!!!!!!!!!!!!
+//        [self.arrOfImageContent removeAllObjects];
+//        [self.arrOfVideoContent removeAllObjects];
+//        self.inItem = NO;
+//    } else {
+//        for(NSString *tag in self.tags) {
+//            if([elementName isEqualToString:tag]) {
+//
+//                NSString *strToAdd = [[NSString alloc] initWithString:self.foundValue];
+//                [self.tempDict setValue:strToAdd forKey:elementName];
+//            }
+//        }
+//    }
+////    NSLog(@"didEndElement ---> %@", elementName);
+//    [self.foundValue setString:@""];
+//}
+//
+//- (void)parserDidEndDocument:(NSXMLParser *)parser {
+//    NSMutableArray *arrToPass = [NSArray arrayWithArray:self.articlesData].mutableCopy;
+//    NSArray *articlesObjects = [self parseArticlesDataIntoArticlesObjects:arrToPass tableView:self.tableView];
+//    self.articles = articlesObjects.mutableCopy;
+//    [self.articlesData removeAllObjects];
+//}
 
 - (void)setUpContraintsForTable {
     [self.tableView setTranslatesAutoresizingMaskIntoConstraints:NO];

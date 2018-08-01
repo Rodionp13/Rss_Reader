@@ -10,6 +10,7 @@
 #import "CDManager.h"
 #import "Downloader.h"
 #import "HTMLParser.h"
+#import "MyXMLParser.h"
 #import "Article.h"
 #import "Channel.h"
 #import "AppDelegate.h"
@@ -38,6 +39,18 @@ static NSString *const kDataBaseData = @"DataBaseData";
     }
     return [[HTMLParser alloc] init];
 }
+
+//- (void)checkingForLoadingArticleContent:(NSURL*)urlForAllChannelsArticles {
+//
+//
+//
+//
+//
+//    [Downloader downloadTaskWith:urlForAllChannelsArticles handler:^(NSURL *destinationUrl) {
+//        MyXMLParser *xmlParser = [[MyXMLParser alloc] initWithUrl:destinationUrl];
+//        if(![xmlParser.myXMLParser parse]) {NSAssert(errno, @"Some problems with parser!!!APPManager respone");} else {NSLog(@"PARSING STARTED APPManager response");}
+//    }];
+//}
 
 - (void)checkingForLoadingChennelContent {
     NSURL *url = [NSURL URLWithString:kChannelsLink];

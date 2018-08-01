@@ -68,13 +68,9 @@ static NSString *const kFreshNews = @"freshNews";
             NSEntityDescription *entityDescr = [NSEntityDescription entityForName:kChannelEnt inManagedObjectContext:self.context];
             ChannelMO *newChannelMO = [[ChannelMO alloc] initWithEntity:entityDescr insertIntoManagedObjectContext:self.context];
             id channel = [channels objectAtIndex:j];
-            NSString *name = [channel name];
-            NSString *url = [channel url];
             NSString *channelGroup = headers[i];
             
-            newChannelMO.name = name;
-            newChannelMO.url = url;
-            newChannelMO.channelGroup = channelGroup;
+            newChannelMO = (ChannelMO*)[self convertChannelinToMO:channel channelGroup:channelGroup];
             [appDelegate saveContext];
         }
     }
@@ -96,12 +92,12 @@ static NSString *const kFreshNews = @"freshNews";
     NSMutableArray *gorupOfChannels = [NSMutableArray array];
     NSMutableArray *subChannels = [NSMutableArray array];
     
-    NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:kChannelGroup ascending:YES];
-    NSArray *channelsSortedByGroup = [self loadDataFromDBWithPredicate:nil andDescriptor:@[descriptor]];
-    NSLog(@"%lu,%@", channelsSortedByGroup.count, channelsSortedByGroup);
+//    NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:kChannelGroup ascending:YES];
+    NSArray *channelsSortedByGroup = [managedObjects mutableCopy];
+//    NSLog(@"%lu,%@", channelsSortedByGroup.count, channelsSortedByGroup);
     
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
-        
+    
     for(int i = 0; i < channelsSortedByGroup.count; i++) {
         NSString *sortedChannelGroupProperty = [[channelsSortedByGroup objectAtIndex:i] channelGroup];
         NSString *secondSortedChannelGroupProperty;
@@ -110,7 +106,7 @@ static NSString *const kFreshNews = @"freshNews";
         if((i+1) != channelsSortedByGroup.count) {
         secondSortedChannelGroupProperty = [[channelsSortedByGroup objectAtIndex:i + 1] channelGroup];
         } else {
-            secondSortedChannelGroupProperty = [[channelsSortedByGroup objectAtIndex:i] channelGroup];
+            secondSortedChannelGroupProperty = sortedChannelGroupProperty.copy;//[[channelsSortedByGroup objectAtIndex:i] channelGroup]
         }
         Channel *newChannel = [self convertMOinToObj:[channelsSortedByGroup objectAtIndex:i]];
         [subChannels addObject:newChannel];
@@ -138,6 +134,16 @@ static NSString *const kFreshNews = @"freshNews";
     Channel *channel = [[Channel alloc] initWithName:channelMO.name url:channelMO.url];
     return channel;
 }
+
+- (NSManagedObject*)convertChannelinToMO:(NSObject*)object channelGroup:(NSString*)channelGroup {
+    Channel *channel = (Channel*)object;
+    ChannelMO *channelMO = [[ChannelMO alloc] initWithEntity:[NSEntityDescription entityForName:kChannelEnt inManagedObjectContext:self.context] insertIntoManagedObjectContext:self.context];
+    channelMO.name = channel.name;
+    channelMO.url = channel.url;
+    channelMO.channelGroup = channelGroup;
+    return channelMO;
+}
+
 
 
 
