@@ -19,10 +19,11 @@ static NSString *const kMediaTypePng = @"png";
 static NSString *const kMediaTypeMp4 = @"mp4";
 
 
-@interface ArticlesViewController () <UITableViewDataSource,UITableViewDelegate,NSXMLParserDelegate, MyXMLParseDelegate>
+@interface ArticlesViewController () <UITableViewDataSource,UITableViewDelegate,NSXMLParserDelegate, MyXMLParseDelegate, APPManagerDelegate>
 @property(strong, nonatomic) UITableView *tableView;
 @property(strong, nonatomic) NSMutableArray *articles;
 @property(strong, nonatomic) NSMutableArray *articlesData;//test
+@property(strong, nonatomic) APPManager *appManager;
 
 //@property(strong, nonatomic) NSXMLParser *xmlParser;
 @property(strong, nonatomic) NSArray *tags;
@@ -42,6 +43,14 @@ static NSString *const kMediaTypeMp4 = @"mp4";
     
     self.articles = [[NSMutableArray alloc] init];
     self.articlesData = [[NSMutableArray alloc] init];
+//    self.appManager = [[APPManager alloc] init];
+//    self.appManager.delegate = self;
+    
+    /* это можно сдеать вместо делегата - заводим пропертю блок в appManager и потом её здесь вызываем с массивом и делаем reloadData на tableView
+    self.appManager.outpt = { arr in
+        self.tabelvew.kCFStringEncodingNonLossyASCII
+    }
+     */
     
     //tableview initialization
     self.tableView = [[UITableView alloc] initWithFrame:self.view.frame];
@@ -54,10 +63,15 @@ static NSString *const kMediaTypeMp4 = @"mp4";
     [self download];
 }
 
+- (void)complitionLoadingArticlesData:(NSMutableArray *)articlesData {
+    self.articles = articlesData;
+    [self.tableView reloadData];
+}
+
 #pragma mark - methods for table view
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.articles.count;
+    return self.articles.count;//self.manager.daatset  - это пропертя в appManager, и её трэкаем постоянно
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -108,7 +122,7 @@ static NSString *const kMediaTypeMp4 = @"mp4";
 //        }
 //    }];
     [Downloader downloadTaskWith:myUrl handler:^(NSURL *destinationUrl) {
-        MyXMLParser *parser = [[MyXMLParser alloc] initWithUrl:[NSURL URLWithString:self.stringUrl]];
+        MyXMLParser *parser = [[MyXMLParser alloc] initWithUrl:destinationUrl];//[NSURL URLWithString:self.stringUrl]
         parser.delegate = self;
         if(![parser.myXMLParser parse]) {NSAssert(errno, @"Some problems with parser!!!ArticleVC respone");} else {NSLog(@"PARSING STARTED ARTICEVC response");}
     }];

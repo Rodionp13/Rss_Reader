@@ -10,7 +10,7 @@
 
 @protocol MyXMLParseDelegate
 - (void) parseFetchedDataIntoArticlesObjects:(NSArray *)fetchedArticleData;
-
+- (void) getArticlesDataAfterXMlParsing:(NSArray*)fetchedXMlData;
 @end
 
 @interface MyXMLParser : NSObject

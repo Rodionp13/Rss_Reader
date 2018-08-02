@@ -41,8 +41,8 @@ static NSString *const kFreshNews = @"freshNews";
 - (NSArray *)loadDataFromDBWithPredicate:(nullable NSPredicate*)predicate andDescriptor:(nullable NSArray<NSSortDescriptor*>*)sortDescriptors {
     NSFetchRequest *request = [ChannelMO fetchRequest];
     [request setReturnsObjectsAsFaults:NO];
-    [request setPredicate:predicate];
-    [request setSortDescriptors:sortDescriptors];
+    if(predicate != nil) {[request setPredicate:predicate];}
+    if(sortDescriptors != nil) {[request setSortDescriptors:sortDescriptors];}
     
     NSError *err;
     NSArray *result;
@@ -50,30 +50,33 @@ static NSString *const kFreshNews = @"freshNews";
         if(err != nil) {
             NSLog(@"1.Failed to load data from CD with predicate\n%@\n%@", err, [err localizedDescription]);
         } else {
-            NSLog(@"1.Success load data from CD with predicate, element count=%lu\n%@", [result count], [result description]);
+//            NSLog(@"1.Success load data from CD with predicate, element count=%lu\n%@", [result count], [result description]);
         }
     return result;
 }
 
 - (void)addNewRecordsToDB:(NSDictionary *)channelsAndHeaders {
-//    NSArray *channelGroups = [[channelsData valueForKey:kChannels] copy];
+    NSLog(@"=== BEFORE %lu", [[self loadDataFromDBWithPredicate:nil andDescriptor:nil] count]);
     NSArray *headers = [channelsAndHeaders valueForKey:kHeaders];
     NSArray *channelGroups = [channelsAndHeaders valueForKey:kChannels];
     AppDelegate *appDelegate = (AppDelegate*)[UIApplication sharedApplication].delegate;
-    
+    NSMutableArray *forCount = [NSMutableArray array];
     for(int i = 0; i < channelGroups.count; i++) {
         NSArray *channels = channelGroups[i];
         for(int j = 0; j < channels.count; j++) {
             
-            NSEntityDescription *entityDescr = [NSEntityDescription entityForName:kChannelEnt inManagedObjectContext:self.context];
-            ChannelMO *newChannelMO = [[ChannelMO alloc] initWithEntity:entityDescr insertIntoManagedObjectContext:self.context];
+//            NSEntityDescription *entityDescr = [NSEntityDescription entityForName:kChannelEnt inManagedObjectContext:self.context];
+//            ChannelMO *newChannelMO = [[ChannelMO alloc] initWithEntity:entityDescr insertIntoManagedObjectContext:self.context];
+            
             id channel = [channels objectAtIndex:j];
             NSString *channelGroup = headers[i];
             
-            newChannelMO = (ChannelMO*)[self convertChannelinToMO:channel channelGroup:channelGroup];
+            ChannelMO *newChannelMO = (ChannelMO*)[self convertChannelinToMO:channel channelGroup:channelGroup];
+            NSLog(@"%@", newChannelMO);
             [appDelegate saveContext];
         }
     }
+    NSLog(@"=== AFTER %lu", [[self loadDataFromDBWithPredicate:nil andDescriptor:nil] count]);
     //check after parsing
 //    NSError *err;
 //    NSArray *result = [self.context executeFetchRequest:[ChannelMO fetchRequest] error:&err];
@@ -85,6 +88,7 @@ static NSString *const kFreshNews = @"freshNews";
 //            NSLog(@"%@", channel.name);
 //        }
 //    }
+    
 }
 
 - (NSDictionary *)parseMOinToObjects:(NSArray*)managedObjects {
@@ -93,10 +97,10 @@ static NSString *const kFreshNews = @"freshNews";
     NSMutableArray *subChannels = [NSMutableArray array];
     
 //    NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:kChannelGroup ascending:YES];
-    NSArray *channelsSortedByGroup = [managedObjects mutableCopy];
+    NSArray *channelsSortedByGroup = managedObjects;
 //    NSLog(@"%lu,%@", channelsSortedByGroup.count, channelsSortedByGroup);
     
-    dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
+//    dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
     
     for(int i = 0; i < channelsSortedByGroup.count; i++) {
         NSString *sortedChannelGroupProperty = [[channelsSortedByGroup objectAtIndex:i] channelGroup];
@@ -118,7 +122,7 @@ static NSString *const kFreshNews = @"freshNews";
             [subChannels removeAllObjects];
         }
     }
-    });
+//    });
 //    NSLog(@"%lu, %@", headers.count,headers);
 //    NSArray *arr = [gorupOfChannels objectAtIndex:0];
 //    NSLog(@"%@", [[arr objectAtIndex:0] name]);
@@ -129,21 +133,33 @@ static NSString *const kFreshNews = @"freshNews";
 }
 
 
-- (Channel*)convertMOinToObj:(NSManagedObject*)managedObj {
-    ChannelMO *channelMO = (ChannelMO*)managedObj;
+- (Channel*)convertMOinToObj:(ChannelMO*)managedObj {
+    ChannelMO *channelMO = managedObj;
     Channel *channel = [[Channel alloc] initWithName:channelMO.name url:channelMO.url];
     return channel;
 }
 
-- (NSManagedObject*)convertChannelinToMO:(NSObject*)object channelGroup:(NSString*)channelGroup {
+- (ChannelMO*)convertChannelinToMO:(Channel*)object channelGroup:(NSString*)channelGroup {
     Channel *channel = (Channel*)object;
     ChannelMO *channelMO = [[ChannelMO alloc] initWithEntity:[NSEntityDescription entityForName:kChannelEnt inManagedObjectContext:self.context] insertIntoManagedObjectContext:self.context];
     channelMO.name = channel.name;
     channelMO.url = channel.url;
     channelMO.channelGroup = channelGroup;
+    NSLog(@"name %@, %@", channel.name, channelMO.name);
     return channelMO;
 }
 
+
+- (NSUInteger) deleteAllObjects {
+    AppDelegate *appDelegate = (AppDelegate*)[UIApplication sharedApplication].delegate;
+    NSArray *arrToDelete = [self loadDataFromDBWithPredicate:nil andDescriptor:nil];
+    for(ChannelMO *mo in arrToDelete) {
+        [self.context deleteObject:mo];
+        [appDelegate saveContext];
+    }
+    NSUInteger count = [[self loadDataFromDBWithPredicate:nil andDescriptor:nil] count];
+    return count;
+}
 
 
 

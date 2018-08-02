@@ -5,7 +5,6 @@
         <attribute name="articleLink" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="iconUrl" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="originalIconUrl" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="channel" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="ChannelEnt" inverseName="articles" inverseEntity="ChannelEnt" syncable="YES"/>
         <relationship name="imageContentURLsAndNames" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ImageContentURLAndNameEnt" inverseName="article" inverseEntity="ImageContentURLAndNameEnt" syncable="YES"/>
@@ -26,8 +25,8 @@
         <relationship name="article" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="ArticleEnt" inverseName="videoContentURLsAndNames" inverseEntity="ArticleEnt" syncable="YES"/>
     </entity>
     <elements>
-        <element name="ArticleEnt" positionX="-63" positionY="9" width="128" height="178"/>
-        <element name="ChannelEnt" positionX="-279" positionY="0" width="128" height="103"/>
+        <element name="ArticleEnt" positionX="-63" positionY="9" width="128" height="165"/>
+        <element name="ChannelEnt" positionX="-279" positionY="0" width="128" height="105"/>
         <element name="ImageContentURLAndNameEnt" positionX="153" positionY="63" width="180" height="73"/>
         <element name="VideoContentURLAndNameEnt" positionX="160" positionY="240" width="173" height="73"/>
     </elements>

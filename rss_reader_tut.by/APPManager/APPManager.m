@@ -19,9 +19,10 @@ static NSString *const kChannelsLink = @"https://news.tut.by/rss.html";
 static NSString *const kDownloadedData = @"DownloadedData";
 static NSString *const kDataBaseData = @"DataBaseData";
 
-@interface APPManager()
+@interface APPManager() <MyXMLParseDelegate>
 @property(strong, nonatomic) CDManager *cdManager;
 @property(strong, nonatomic) HTMLParser *htmlParser;
+@property(strong, nonatomic) NSArray *fetchedDataAfterXmlParsing;
 @end
 
 @implementation APPManager
@@ -40,24 +41,91 @@ static NSString *const kDataBaseData = @"DataBaseData";
     return [[HTMLParser alloc] init];
 }
 
-//- (void)checkingForLoadingArticleContent:(NSURL*)urlForAllChannelsArticles {
-//
-//
-//
-//
-//
-//    [Downloader downloadTaskWith:urlForAllChannelsArticles handler:^(NSURL *destinationUrl) {
-//        MyXMLParser *xmlParser = [[MyXMLParser alloc] initWithUrl:destinationUrl];
-//        if(![xmlParser.myXMLParser parse]) {NSAssert(errno, @"Some problems with parser!!!APPManager respone");} else {NSLog(@"PARSING STARTED APPManager response");}
-//    }];
-//}
+- (void)checkingForLoadingArticleContent:(NSURL*)urlForAllChannelsArticles {
+    NSArray *sortedAtricles = [self prepareAndGetSortedArticlesDataFromDb:urlForAllChannelsArticles];
+    if(sortedAtricles.count != 0) {
+        [self convertArticlesMOinToArticlesObjects:sortedAtricles withComplitionBlock:^(NSMutableArray<Article *> *articlesArr) {
+            [self.delegate complitionLoadingArticlesData:articlesArr];
+        }];
+        //
+        if([AppDelegate isNetworkAvailable]) {
+            /*Than download data and compare it with CD data
+             ........*/
+        }
+    } else if(sortedAtricles.count == 0) {
+        
+    }
+    
+    
+    
+    [Downloader downloadTaskWith:urlForAllChannelsArticles handler:^(NSURL *destinationUrl) {
+        MyXMLParser *xmlParser = [[MyXMLParser alloc] initWithUrl:destinationUrl];
+        xmlParser.delegate = self;
+        if(![xmlParser.myXMLParser parse]) {NSAssert(errno, @"Some problems with parser!!!APPManager respone");} else {NSLog(@"PARSING STARTED APPManager response");}
+    }];
+}
+
+- (void)firstDownloadArticlesContent:(NSURL*)url withComplitionBlock:(void(^)(NSMutableArray*articles))complitionBlock {
+    [Downloader downloadTaskWith:url handler:^(NSURL *destinationUrl) {
+        MyXMLParser *xmlParser = [[MyXMLParser alloc] initWithUrl:destinationUrl];
+        if(![xmlParser.myXMLParser parse]) {NSAssert(errno, @"Some problems with parser!!!APPManager respone");} else {NSLog(@"PARSING STARTED APPManager response");}
+    }];
+}
+
+- (void)getArticlesDataAfterXMlParsing:(NSArray *)fetchedXMlData {
+    self.fetchedDataAfterXmlParsing = [NSArray arrayWithArray:fetchedXMlData];
+    
+}
+
+- (NSArray *)prepareAndGetSortedArticlesDataFromDb:(NSURL*)channelUrl {
+    NSArray *selectedChannel = [self getSelectedChannelFromDb:channelUrl];
+    if(![[selectedChannel lastObject] isKindOfClass:ChannelMO.class]) {NSAssert(errno, @"Wrong type of object(shoud be ChannelMO response from prepareAndGetArticlesDataFromDb:)");}
+    ChannelMO *channel = (ChannelMO*)[selectedChannel lastObject];
+    NSArray<ArticleMO*> *articles = [channel.articles allObjects];
+    NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"date" ascending:YES];
+    NSArray *sortedArticles = [articles sortedArrayUsingDescriptors:@[descriptor]];
+    
+    return sortedArticles;
+}
+
+- (NSArray *)getSelectedChannelFromDb:(NSURL*)channelUrl {
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", channelUrl];
+    NSArray *selectedChannel = [self.cdManager loadDataFromDBWithPredicate:predicate andDescriptor:nil];
+    if(selectedChannel.count > 1) {NSAssert(errno, @"Count of Channel Array > 1 response from getSelectedChannelFromDb: method");}
+    return selectedChannel;
+}
+
+- (void)convertArticlesMOinToArticlesObjects:(NSArray<ArticleMO*>*)articlesMO withComplitionBlock:(void(^)(NSMutableArray<Article*>*articlesArr))complition {
+    NSMutableArray *articles = [NSMutableArray array];
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
+        for(int i = 0; i < articlesMO.count; i++) {
+            ArticleMO *artMO = articlesMO[i];
+            
+            NSArray<ImageContentURLAndNameMO*> *imageContent = [artMO.imageContentURLsAndNames allObjects];
+            NSArray<VideoContentURLAndNameMO*> *videoContent = [artMO.videoContentURLsAndNames allObjects];
+            Article *article = [self getArticle:artMO images:imageContent videoContent:videoContent];
+            [articles addObject:article];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            complition(articles);
+        });
+    });
+}
+
+- (Article*)getArticle:(ArticleMO*)articleMO images:(NSArray*)images videoContent:(NSArray*)videoContent  {
+    Article *article = [[Article alloc] initWithTitle:articleMO.title iconUrlStr:articleMO.iconUrl icon:[UIImage imageNamed:@"rss"] date:articleMO.date description:articleMO.articleDescr link:articleMO.articleLink images:[images mutableCopy] andVideoContent:[videoContent mutableCopy]];
+    return article;
+}
 
 - (void)checkingForLoadingChennelContent {
-    NSURL *url = [NSURL URLWithString:kChannelsLink];
-    NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:kChannelGroup ascending:YES];
-    NSArray *dataFromDB = [self.cdManager loadDataFromDBWithPredicate:nil andDescriptor:@[descriptor]];
+//    NSLog(@"COUNT AFTER DELETE = %lu", [self.cdManager deleteAllObjects]);
     
-    if(dataFromDB.count != 0) {// core data.count != 0 && networkConnection isAvailable
+    NSURL *url = [NSURL URLWithString:kChannelsLink];
+    NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:kChannelGroupAtr ascending:YES];
+    NSArray *dataFromDB = [self.cdManager loadDataFromDBWithPredicate:nil andDescriptor:@[descriptor]];
+    NSLog(@"%lu == dataFromDb,\n%@", dataFromDB.count, [[dataFromDB lastObject] valueForKey:@"name"]);
+    
+    if(dataFromDB.count > 0) {// core data.count != 0 && networkConnection isAvailable
         NSDictionary *validChannelObjects = [self.cdManager parseMOinToObjects:dataFromDB];
         [self.delegate complitionLoadingChannelsData:validChannelObjects];
         
@@ -79,20 +147,33 @@ static NSString *const kDataBaseData = @"DataBaseData";
             }];
            }
         
-        } else {
+        } else if(dataFromDB.count == 0) {
             if([AppDelegate isNetworkAvailable]) {
             [self firstDownloadContent:url withComplition:^(NSDictionary *channelsAndHeaders) {
-                APPManager *__weak weakSelf = self;
+//                APPManager *__weak weakSelf = self;
             dispatch_async(dispatch_get_main_queue(), ^{
-                APPManager *__strong strongSelf = weakSelf;
-                [strongSelf.delegate complitionLoadingChannelsData:channelsAndHeaders];
-                [strongSelf.cdManager addNewRecordsToDB:channelsAndHeaders];
+//                APPManager *__strong strongSelf = weakSelf;
+                [self.delegate complitionLoadingChannelsData:channelsAndHeaders];
+                [self.cdManager addNewRecordsToDB:channelsAndHeaders];
+//                NSLog(@"======= %lu", [[strongSelf.cdManager loadDataFromDBWithPredicate:nil andDescriptor:nil] count]);
                 //WHy WHy Why not???????
                 //[self.cdDelegate parseChannelsDataToChannelsMOAndAddRecordsToDB: channelsAndHeaders];
                 });
               }];
             }
     }
+}
+
+- (void)firstDownloadContent:(NSURL*)url withComplition:(void(^)(NSDictionary *channelsAndHeaders))complitionBlock {
+    [Downloader downloadTaskWith:url handler:^(NSURL *destinationUrl) {
+        if(destinationUrl != nil) {
+            NSData *data = [[NSData alloc] initWithContentsOfURL:destinationUrl];
+            NSString *resString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSDictionary *channelsAndHeaders = [self.htmlParser parseHTML:resString];
+            
+            complitionBlock(channelsAndHeaders);
+        } else {NSAssert(errno, @"Failed to load channels");}
+    }];
 }
 
 - (NSArray *)checkForNewDownloadedElements:(NSArray*)groupChannels {
@@ -110,20 +191,6 @@ static NSString *const kDataBaseData = @"DataBaseData";
         }
     }
     return newChannelsToAddinDb.copy;
-}
-
-
-
-- (void)firstDownloadContent:(NSURL*)url withComplition:(void(^)(NSDictionary *channelsAndHeaders))complitionBlock {
-    [Downloader downloadTaskWith:url handler:^(NSURL *destinationUrl) {
-        if(destinationUrl != nil) {
-            NSData *data = [[NSData alloc] initWithContentsOfURL:destinationUrl];
-            NSString *resString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            NSDictionary *channelsAndHeaders = [self.htmlParser parseHTML:resString];
-            
-            complitionBlock(channelsAndHeaders);
-        } else {NSAssert(errno, @"Failed to load channels");}
-    }];
 }
 
 @end

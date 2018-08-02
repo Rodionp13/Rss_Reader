@@ -122,6 +122,7 @@ static NSString *const kMediaTypeMp4 = @"mp4";
     [self.delegate parseFetchedDataIntoArticlesObjects:arrToParse];
 //    NSArray *articlesObjects = [self parseArticlesDataIntoArticlesObjects:arrToPass tableView:self.tableView];
 //    self.articles = articlesObjects.mutableCopy;
+    [self.delegate getArticlesDataAfterXMlParsing:arrToParse];
     [self.articlesData removeAllObjects];
 }
 

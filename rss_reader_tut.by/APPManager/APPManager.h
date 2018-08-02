@@ -11,6 +11,7 @@
 @protocol APPManagerDelegate
 @optional
 - (void) complitionLoadingChannelsData:(NSDictionary *)channelsData;
+- (void) complitionLoadingArticlesData:(NSMutableArray *)articlesData;
 @end
 
 
