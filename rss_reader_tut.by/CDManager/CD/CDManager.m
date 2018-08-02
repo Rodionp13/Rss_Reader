@@ -7,8 +7,6 @@
 //
 
 #import "CDManager.h"
-#import "Channel.h"
-#import "Article.h"
 
 static NSString *const kHeaders = @"headers";
 static NSString *const kChannels = @"channels";
@@ -50,9 +48,22 @@ static NSString *const kFreshNews = @"freshNews";
         if(err != nil) {
             NSLog(@"1.Failed to load data from CD with predicate\n%@\n%@", err, [err localizedDescription]);
         } else {
-//            NSLog(@"1.Success load data from CD with predicate, element count=%lu\n%@", [result count], [result description]);
+            NSLog(@"1.Success load data from CD with predicate, element count=%lu", [result count]);
         }
     return result;
+}
+
+//Сейчас иди вниз и пиши конвертер из Article to ArticleMO!!!
+- (void)addNewArticlesToChannel:(ChannelMO*)targetChannelMO articlesToAdd:(NSArray<Article*>*)articlse {
+    AppDelegate *appDelegate = (AppDelegate*)[UIApplication sharedApplication].delegate;
+    NSMutableSet *articlesMOArr = [NSMutableSet set];
+    
+    for(int i = 0; i < articlse.count; i++) {
+        ArticleMO *articleMO = [self convertArticleInToMO:articlse[i]];
+        [articlesMOArr addObject: articleMO];
+    }
+    targetChannelMO.articles = articlesMOArr.copy;
+    [appDelegate saveContext];
 }
 
 - (void)addNewRecordsToDB:(NSDictionary *)channelsAndHeaders {
@@ -60,7 +71,7 @@ static NSString *const kFreshNews = @"freshNews";
     NSArray *headers = [channelsAndHeaders valueForKey:kHeaders];
     NSArray *channelGroups = [channelsAndHeaders valueForKey:kChannels];
     AppDelegate *appDelegate = (AppDelegate*)[UIApplication sharedApplication].delegate;
-    NSMutableArray *forCount = [NSMutableArray array];
+
     for(int i = 0; i < channelGroups.count; i++) {
         NSArray *channels = channelGroups[i];
         for(int j = 0; j < channels.count; j++) {
@@ -149,6 +160,67 @@ static NSString *const kFreshNews = @"freshNews";
     return channelMO;
 }
 
+- (void)convertArticlesMOinToArticlesObjects:(NSArray<ArticleMO*>*)articlesMO withComplitionBlock:(void(^)(NSMutableArray<Article*>*articlesArr))complition {
+    NSMutableArray *articles = [NSMutableArray array];
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
+        for(int i = 0; i < articlesMO.count; i++) {
+            ArticleMO *artMO = articlesMO[i];
+            
+            NSArray<ImageContentURLAndNameMO*> *imageContent = [artMO.imageContentURLsAndNames allObjects];
+            NSArray<VideoContentURLAndNameMO*> *videoContent = [artMO.videoContentURLsAndNames allObjects];
+            Article *article = [self getArticle:artMO images:imageContent videoContent:videoContent];
+            [articles addObject:article];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            complition(articles);
+        });
+    });
+}
+
+- (Article*)getArticle:(ArticleMO*)articleMO images:(NSArray*)images videoContent:(NSArray*)videoContent  {
+//    [UIImage imageNamed:@"rss"]
+    UIImage *icon = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:articleMO.iconUrl]]];
+    Article *article = [[Article alloc] initWithTitle:articleMO.title iconUrlStr:articleMO.iconUrl icon:icon date:articleMO.date description:articleMO.articleDescr link:articleMO.articleLink images:[images mutableCopy] andVideoContent:[videoContent mutableCopy]];
+    return article;
+}
+
+- (ArticleMO*)convertArticleInToMO:(Article*)article {
+    ArticleMO *articleMO = [[ArticleMO alloc] initWithEntity:[NSEntityDescription entityForName:kArticleEnt inManagedObjectContext:self.context] insertIntoManagedObjectContext:self.context];
+    NSArray *imageContent = [self getImageContentOfArticle:article];
+    NSArray *videoContent = [self getVideoContentOfArticle:article];
+    
+    articleMO.title = article.title;
+    articleMO.iconUrl = article.iconUrl.absoluteString;
+    articleMO.date = article.date;
+    articleMO.articleLink = article.articleLink.absoluteString;
+    articleMO.articleDescr = article.articleDescr;
+    articleMO.imageContentURLsAndNames = [NSSet setWithArray:imageContent];
+    articleMO.videoContentURLsAndNames = [NSSet setWithArray:videoContent];
+    
+    return articleMO;
+}
+
+- (NSArray<ImageContentURLAndNameMO *>*)getImageContentOfArticle:(Article*)article {
+    NSMutableArray *imageContentArr = [NSMutableArray array];
+    for(int i = 0; i < article.imageContentURLsAndNames.count; i++) {
+        NSString *stringUrlForImage = article.imageContentURLsAndNames[i];
+        ImageContentURLAndNameMO *imageContentMO = [[ImageContentURLAndNameMO alloc] initWithEntity:[NSEntityDescription entityForName:kImageContentURLAndNameEnt inManagedObjectContext:self.context] insertIntoManagedObjectContext:self.context];
+        imageContentMO.imageUrl = stringUrlForImage;
+        [imageContentArr addObject:imageContentMO];
+    }
+    return imageContentArr.copy;
+}
+
+- (NSArray<VideoContentURLAndNameMO *>*)getVideoContentOfArticle:(Article*)article {
+    NSMutableArray *videoContentArr = [NSMutableArray array];
+    for(int i = 0; i < article.videoContentURLsAndNames.count; i++) {
+        NSString *videoUrl = article.videoContentURLsAndNames[i];
+        VideoContentURLAndNameMO *videoContentMO = [[VideoContentURLAndNameMO alloc] initWithEntity:[NSEntityDescription entityForName:kVideoContentURLAndNameEnt inManagedObjectContext:self.context] insertIntoManagedObjectContext:self.context];
+        videoContentMO.videoUrl = videoUrl;
+        [videoContentArr addObject:videoContentMO];
+    }
+    return videoContentArr.copy;
+}
 
 - (NSUInteger) deleteAllObjects {
     AppDelegate *appDelegate = (AppDelegate*)[UIApplication sharedApplication].delegate;

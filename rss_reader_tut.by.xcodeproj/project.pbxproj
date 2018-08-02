@@ -31,6 +31,7 @@
 		CED6EB9D210FA7D8003A72C0 /* APPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6EB9C210FA7D8003A72C0 /* APPManager.m */; };
 		CED6EBA2210FD28A003A72C0 /* ChannelMO+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6EBA0210FD28A003A72C0 /* ChannelMO+CoreDataClass.m */; };
 		CEEFAADE210DFF0300397A91 /* Downloader.m in Sources */ = {isa = PBXBuildFile; fileRef = CEEFAADD210DFF0300397A91 /* Downloader.m */; };
+		CEF2E32521131ECE00126D0C /* MyXMLParser+MyXMLParserTypeConvertingMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF2E32421131ECE00126D0C /* MyXMLParser+MyXMLParserTypeConvertingMethods.m */; };
 		CEF4C404210A868F007BA9DA /* Article.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF4C403210A868F007BA9DA /* Article.m */; };
 /* End PBXBuildFile section */
 
@@ -98,6 +99,16 @@
 		CED6EBA0210FD28A003A72C0 /* ChannelMO+CoreDataClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ChannelMO+CoreDataClass.m"; sourceTree = "<group>"; };
 		CEEFAADC210DFF0300397A91 /* Downloader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Downloader.h; sourceTree = "<group>"; };
 		CEEFAADD210DFF0300397A91 /* Downloader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Downloader.m; sourceTree = "<group>"; };
+		CEF2E32321131ECE00126D0C /* MyXMLParser+MyXMLParserTypeConvertingMethods.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MyXMLParser+MyXMLParserTypeConvertingMethods.h"; sourceTree = "<group>"; };
+		CEF2E32421131ECE00126D0C /* MyXMLParser+MyXMLParserTypeConvertingMethods.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "MyXMLParser+MyXMLParserTypeConvertingMethods.m"; sourceTree = "<group>"; };
+		CEF2E3342113606400126D0C /* VideoContentURLAndNameMO+CoreDataProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "VideoContentURLAndNameMO+CoreDataProperties.h"; sourceTree = "<group>"; };
+		CEF2E3352113606400126D0C /* VideoContentURLAndNameMO+CoreDataClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "VideoContentURLAndNameMO+CoreDataClass.h"; sourceTree = "<group>"; };
+		CEF2E3362113606400126D0C /* VideoContentURLAndNameMO+CoreDataClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "VideoContentURLAndNameMO+CoreDataClass.m"; sourceTree = "<group>"; };
+		CEF2E3372113606400126D0C /* VideoContentURLAndNameMO+CoreDataProperties.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "VideoContentURLAndNameMO+CoreDataProperties.m"; sourceTree = "<group>"; };
+		CEF2E3382113606400126D0C /* ImageContentURLAndNameMO+CoreDataProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ImageContentURLAndNameMO+CoreDataProperties.h"; sourceTree = "<group>"; };
+		CEF2E3392113606400126D0C /* ImageContentURLAndNameMO+CoreDataClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ImageContentURLAndNameMO+CoreDataClass.h"; sourceTree = "<group>"; };
+		CEF2E33A2113606400126D0C /* ImageContentURLAndNameMO+CoreDataClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ImageContentURLAndNameMO+CoreDataClass.m"; sourceTree = "<group>"; };
+		CEF2E33B2113606400126D0C /* ImageContentURLAndNameMO+CoreDataProperties.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ImageContentURLAndNameMO+CoreDataProperties.m"; sourceTree = "<group>"; };
 		CEF4C402210A868F007BA9DA /* Article.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Article.h; sourceTree = "<group>"; };
 		CEF4C403210A868F007BA9DA /* Article.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Article.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -206,8 +217,7 @@
 				3D72CECD210B50230044C0D5 /* ArticleCell.m */,
 				3D72CEC6210B2DD70044C0D5 /* ArticlesViewController+Parsing_Methods.h */,
 				3D72CEC7210B2DD70044C0D5 /* ArticlesViewController+Parsing_Methods.m */,
-				3D11FA9721120B5D0031C8B6 /* MyXMLParser.h */,
-				3D11FA9821120B5D0031C8B6 /* MyXMLParser.m */,
+				CEF2E32621131EE800126D0C /* MyXMLParser */,
 			);
 			path = ArticlesViewController;
 			sourceTree = "<group>";
@@ -280,6 +290,7 @@
 				CED6EB96210FA465003A72C0 /* CD */,
 				CEB2A21F2110531D00047E33 /* ChannelMO */,
 				CEB2A2202110532B00047E33 /* ArticleMO */,
+				CEF2E33321135CBE00126D0C /* Image&VideoContentMO */,
 			);
 			path = CDManager;
 			sourceTree = "<group>";
@@ -300,6 +311,33 @@
 				CED6EB9C210FA7D8003A72C0 /* APPManager.m */,
 			);
 			path = APPManager;
+			sourceTree = "<group>";
+		};
+		CEF2E32621131EE800126D0C /* MyXMLParser */ = {
+			isa = PBXGroup;
+			children = (
+				3D11FA9721120B5D0031C8B6 /* MyXMLParser.h */,
+				3D11FA9821120B5D0031C8B6 /* MyXMLParser.m */,
+				CEF2E32321131ECE00126D0C /* MyXMLParser+MyXMLParserTypeConvertingMethods.h */,
+				CEF2E32421131ECE00126D0C /* MyXMLParser+MyXMLParserTypeConvertingMethods.m */,
+			);
+			path = MyXMLParser;
+			sourceTree = "<group>";
+		};
+		CEF2E33321135CBE00126D0C /* Image&VideoContentMO */ = {
+			isa = PBXGroup;
+			children = (
+				CEF2E3342113606400126D0C /* VideoContentURLAndNameMO+CoreDataProperties.h */,
+				CEF2E3352113606400126D0C /* VideoContentURLAndNameMO+CoreDataClass.h */,
+				CEF2E3362113606400126D0C /* VideoContentURLAndNameMO+CoreDataClass.m */,
+				CEF2E3372113606400126D0C /* VideoContentURLAndNameMO+CoreDataProperties.m */,
+				CEF2E3382113606400126D0C /* ImageContentURLAndNameMO+CoreDataProperties.h */,
+				CEF2E3392113606400126D0C /* ImageContentURLAndNameMO+CoreDataClass.h */,
+				CEF2E33A2113606400126D0C /* ImageContentURLAndNameMO+CoreDataClass.m */,
+				CEF2E33B2113606400126D0C /* ImageContentURLAndNameMO+CoreDataProperties.m */,
+			);
+			name = "Image&VideoContentMO";
+			path = ../..;
 			sourceTree = "<group>";
 		};
 		CEF4C405210A869C007BA9DA /* Article */ = {
@@ -458,6 +496,7 @@
 				3D11FA9921120B5D0031C8B6 /* MyXMLParser.m in Sources */,
 				CECB0B85210F7CBA0093D738 /* rss_reader_tut_by.xcdatamodeld in Sources */,
 				CE2BA8EC21105A5800FB422F /* ChannelMO+CoreDataProperties.m in Sources */,
+				CEF2E32521131ECE00126D0C /* MyXMLParser+MyXMLParserTypeConvertingMethods.m in Sources */,
 				3D03B1E621089ACC005F1029 /* AppDelegate.m in Sources */,
 				3D03B22221089B2F005F1029 /* HTMLParser.m in Sources */,
 			);

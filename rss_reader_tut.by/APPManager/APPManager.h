@@ -19,6 +19,7 @@
 @property(weak, nonatomic) id <APPManagerDelegate> delegate;
 
 - (void)checkingForLoadingChennelContent;
+- (void)checkingForLoadingArticleContent:(NSURL*)urlForAllChannelsArticles;
 @end
 
 //@property(strong, nonatomic) id <APPManagerCoreDateDelegate> cdDelegate;

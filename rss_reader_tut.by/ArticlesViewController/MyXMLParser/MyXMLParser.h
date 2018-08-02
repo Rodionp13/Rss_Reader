@@ -7,10 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Article.h"
 
 @protocol MyXMLParseDelegate
+
 - (void) parseFetchedDataIntoArticlesObjects:(NSArray *)fetchedArticleData;
-- (void) getArticlesDataAfterXMlParsing:(NSArray*)fetchedXMlData;
+- (void) getArticlesDataAfterXMlParsing:(NSArray<Article*>*)fetchedXMlData;
 @end
 
 @interface MyXMLParser : NSObject

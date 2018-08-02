@@ -19,7 +19,7 @@ static NSString *const kMediaTypePng = @"png";
 static NSString *const kMediaTypeMp4 = @"mp4";
 
 
-@interface ArticlesViewController () <UITableViewDataSource,UITableViewDelegate,NSXMLParserDelegate, MyXMLParseDelegate, APPManagerDelegate>
+@interface ArticlesViewController () <UITableViewDataSource,UITableViewDelegate,NSXMLParserDelegate, APPManagerDelegate>
 @property(strong, nonatomic) UITableView *tableView;
 @property(strong, nonatomic) NSMutableArray *articles;
 @property(strong, nonatomic) NSMutableArray *articlesData;//test
@@ -43,9 +43,10 @@ static NSString *const kMediaTypeMp4 = @"mp4";
     
     self.articles = [[NSMutableArray alloc] init];
     self.articlesData = [[NSMutableArray alloc] init];
-//    self.appManager = [[APPManager alloc] init];
-//    self.appManager.delegate = self;
-    
+    self.appManager = [[APPManager alloc] init];
+    self.appManager.delegate = self;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTable) name:@"updateTable" object:nil];
+    [self.appManager checkingForLoadingArticleContent:[NSURL URLWithString:self.stringUrl]];
     /* это можно сдеать вместо делегата - заводим пропертю блок в appManager и потом её здесь вызываем с массивом и делаем reloadData на tableView
     self.appManager.outpt = { arr in
         self.tabelvew.kCFStringEncodingNonLossyASCII
@@ -60,11 +61,15 @@ static NSString *const kMediaTypeMp4 = @"mp4";
     [self.view addSubview:self.tableView];
     [self setUpContraintsForTable];
     //fetching data for articles
-    [self download];
+//    [self download];
 }
 
+//App manager delegate TEST
 - (void)complitionLoadingArticlesData:(NSMutableArray *)articlesData {
     self.articles = articlesData;
+    [self.tableView reloadData];
+}
+- (void)updateTable {
     [self.tableView reloadData];
 }
 
@@ -77,7 +82,6 @@ static NSString *const kMediaTypeMp4 = @"mp4";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ArticleCell *cell = [[tableView dequeueReusableCellWithIdentifier:kCellId2 forIndexPath:indexPath] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:kCellId2];
     Article *article = [self.articles objectAtIndex:indexPath.row];
-    
 //    UIImage *icon;
 //    if(article.icon != nil) {
 ////        NSData *data = [NSData dataWithContentsOfURL:article.originalIconUrl];
@@ -107,20 +111,21 @@ static NSString *const kMediaTypeMp4 = @"mp4";
 
 
 
+
 #pragma mark - method for downloading xml file to the Document directory
 
 - (void)download {
     NSURL *myUrl = [NSURL URLWithString:self.stringUrl];
-
-//    [Downloader downloadTaskWith:myUrl handler:^(NSURL *destinationUrl) {
-//        if(destinationUrl != nil) {
-//            NSXMLParser *xmlParser = [[NSXMLParser alloc] initWithContentsOfURL:destinationUrl];
-//            [xmlParser setDelegate:self];
-//            if([xmlParser parse]) {
-//                NSLog(@"Parse started");
-//            }
-//        }
-//    }];
+    
+    //    [Downloader downloadTaskWith:myUrl handler:^(NSURL *destinationUrl) {
+    //        if(destinationUrl != nil) {
+    //            NSXMLParser *xmlParser = [[NSXMLParser alloc] initWithContentsOfURL:destinationUrl];
+    //            [xmlParser setDelegate:self];
+    //            if([xmlParser parse]) {
+    //                NSLog(@"Parse started");
+    //            }
+    //        }
+    //    }];
     [Downloader downloadTaskWith:myUrl handler:^(NSURL *destinationUrl) {
         MyXMLParser *parser = [[MyXMLParser alloc] initWithUrl:destinationUrl];//[NSURL URLWithString:self.stringUrl]
         parser.delegate = self;
@@ -212,8 +217,5 @@ static NSString *const kMediaTypeMp4 = @"mp4";
     NSLayoutConstraint *trailing = [self.tableView.trailingAnchor constraintEqualToSystemSpacingAfterAnchor:self.view.safeAreaLayoutGuide.trailingAnchor multiplier:0];
     [NSLayoutConstraint activateConstraints:@[top, leading, botton, trailing]];
 }
-
-
-
 
 @end

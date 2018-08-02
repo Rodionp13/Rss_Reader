@@ -70,7 +70,7 @@ static NSString *const kChannelsLink = @"https://news.tut.by/rss.html";
     [self.view addSubview:self.myTable];
     [self setUpContraintsForTable];
     
-    self.navigationItem.title = @"RSS - reader" ;
+    self.navigationItem.title = @"RSS - reader";
 }
 
 #pragma mark - APPManager delegate method(download complition)

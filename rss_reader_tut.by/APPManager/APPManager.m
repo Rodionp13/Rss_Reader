@@ -23,6 +23,7 @@ static NSString *const kDataBaseData = @"DataBaseData";
 @property(strong, nonatomic) CDManager *cdManager;
 @property(strong, nonatomic) HTMLParser *htmlParser;
 @property(strong, nonatomic) NSArray *fetchedDataAfterXmlParsing;
+@property(strong, nonatomic) ChannelMO *selectedChannel;
 @end
 
 @implementation APPManager
@@ -42,9 +43,21 @@ static NSString *const kDataBaseData = @"DataBaseData";
 }
 
 - (void)checkingForLoadingArticleContent:(NSURL*)urlForAllChannelsArticles {
+//    NSArray *res = [self.cdManager loadDataFromDBWithPredicate:nil andDescriptor:nil];
+//    NSLog(@"RELATIONSHIP RESULT\n%lu", res.count);
+//    for(int i = 0; i < res.count; i++) {
+//        ChannelMO *mo = res[i];
+//        NSSet<ArticleMO*> *artMO = mo.articles;
+//        NSLog(@"%lu", artMO.count);
+//        NSLog(@"CHANNEL:%@", mo.name);
+//        for(ArticleMO *art in artMO) {
+//            NSLog(@"SCOUP%@\n%@", art.title, art.articleLink);
+//        }
+//        
+//    }
     NSArray *sortedAtricles = [self prepareAndGetSortedArticlesDataFromDb:urlForAllChannelsArticles];
     if(sortedAtricles.count != 0) {
-        [self convertArticlesMOinToArticlesObjects:sortedAtricles withComplitionBlock:^(NSMutableArray<Article *> *articlesArr) {
+        [self.cdManager convertArticlesMOinToArticlesObjects:sortedAtricles withComplitionBlock:^(NSMutableArray<Article *> *articlesArr) {
             [self.delegate complitionLoadingArticlesData:articlesArr];
         }];
         //
@@ -53,28 +66,34 @@ static NSString *const kDataBaseData = @"DataBaseData";
              ........*/
         }
     } else if(sortedAtricles.count == 0) {
+        [self firstDownloadArticlesContent:urlForAllChannelsArticles withComplitionBlock:^(NSMutableArray *articles) {
+            //??? some response; for now don't know what exactcy it is to be...
+        }];
         
     }
     
     
     
-    [Downloader downloadTaskWith:urlForAllChannelsArticles handler:^(NSURL *destinationUrl) {
+//    [Downloader downloadTaskWith:urlForAllChannelsArticles handler:^(NSURL *destinationUrl) {
+//        MyXMLParser *xmlParser = [[MyXMLParser alloc] initWithUrl:destinationUrl];
+//        xmlParser.delegate = self;
+//        if(![xmlParser.myXMLParser parse]) {NSAssert(errno, @"Some problems with parser!!!APPManager respone");} else {NSLog(@"PARSING STARTED APPManager response");}
+//    }];
+}
+
+- (void)firstDownloadArticlesContent:(NSURL*)url withComplitionBlock:(void(^)(NSMutableArray*articles))complitionBlock {
+    [Downloader downloadTaskWith:url handler:^(NSURL *destinationUrl) {
         MyXMLParser *xmlParser = [[MyXMLParser alloc] initWithUrl:destinationUrl];
         xmlParser.delegate = self;
         if(![xmlParser.myXMLParser parse]) {NSAssert(errno, @"Some problems with parser!!!APPManager respone");} else {NSLog(@"PARSING STARTED APPManager response");}
     }];
 }
 
-- (void)firstDownloadArticlesContent:(NSURL*)url withComplitionBlock:(void(^)(NSMutableArray*articles))complitionBlock {
-    [Downloader downloadTaskWith:url handler:^(NSURL *destinationUrl) {
-        MyXMLParser *xmlParser = [[MyXMLParser alloc] initWithUrl:destinationUrl];
-        if(![xmlParser.myXMLParser parse]) {NSAssert(errno, @"Some problems with parser!!!APPManager respone");} else {NSLog(@"PARSING STARTED APPManager response");}
-    }];
-}
-
 - (void)getArticlesDataAfterXMlParsing:(NSArray *)fetchedXMlData {
-    self.fetchedDataAfterXmlParsing = [NSArray arrayWithArray:fetchedXMlData];
+//    self.fetchedDataAfterXmlParsing = [NSArray arrayWithArray:fetchedXMlData];// USELESS for now
+    [self.delegate complitionLoadingArticlesData:fetchedXMlData.mutableCopy];
     
+    [self.cdManager addNewArticlesToChannel:self.selectedChannel articlesToAdd:fetchedXMlData];
 }
 
 - (NSArray *)prepareAndGetSortedArticlesDataFromDb:(NSURL*)channelUrl {
@@ -89,33 +108,36 @@ static NSString *const kDataBaseData = @"DataBaseData";
 }
 
 - (NSArray *)getSelectedChannelFromDb:(NSURL*)channelUrl {
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", channelUrl];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@",kChannelUrlAtr,[channelUrl absoluteString]];
     NSArray *selectedChannel = [self.cdManager loadDataFromDBWithPredicate:predicate andDescriptor:nil];
     if(selectedChannel.count > 1) {NSAssert(errno, @"Count of Channel Array > 1 response from getSelectedChannelFromDb: method");}
+    self.selectedChannel = [selectedChannel lastObject];
     return selectedChannel;
 }
 
-- (void)convertArticlesMOinToArticlesObjects:(NSArray<ArticleMO*>*)articlesMO withComplitionBlock:(void(^)(NSMutableArray<Article*>*articlesArr))complition {
-    NSMutableArray *articles = [NSMutableArray array];
-    dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
-        for(int i = 0; i < articlesMO.count; i++) {
-            ArticleMO *artMO = articlesMO[i];
-            
-            NSArray<ImageContentURLAndNameMO*> *imageContent = [artMO.imageContentURLsAndNames allObjects];
-            NSArray<VideoContentURLAndNameMO*> *videoContent = [artMO.videoContentURLsAndNames allObjects];
-            Article *article = [self getArticle:artMO images:imageContent videoContent:videoContent];
-            [articles addObject:article];
-        }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            complition(articles);
-        });
-    });
-}
-
-- (Article*)getArticle:(ArticleMO*)articleMO images:(NSArray*)images videoContent:(NSArray*)videoContent  {
-    Article *article = [[Article alloc] initWithTitle:articleMO.title iconUrlStr:articleMO.iconUrl icon:[UIImage imageNamed:@"rss"] date:articleMO.date description:articleMO.articleDescr link:articleMO.articleLink images:[images mutableCopy] andVideoContent:[videoContent mutableCopy]];
-    return article;
-}
+//- (void)convertArticlesMOinToArticlesObjects:(NSArray<ArticleMO*>*)articlesMO withComplitionBlock:(void(^)(NSMutableArray<Article*>*articlesArr))complition {
+//    NSMutableArray *articles = [NSMutableArray array];
+//    dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
+//        for(int i = 0; i < articlesMO.count; i++) {
+//            ArticleMO *artMO = articlesMO[i];
+//
+//            NSArray<ImageContentURLAndNameMO*> *imageContent = [artMO.imageContentURLsAndNames allObjects];
+//            NSArray<VideoContentURLAndNameMO*> *videoContent = [artMO.videoContentURLsAndNames allObjects];
+//            Article *article = [self getArticle:artMO images:imageContent videoContent:videoContent];
+//            [articles addObject:article];
+//        }
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            complition(articles);
+//        });
+//    });
+//}
+//
+//- (Article*)getArticle:(ArticleMO*)articleMO images:(NSArray*)images videoContent:(NSArray*)videoContent  {
+//    UIImage *icon = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:articleMO.iconUrl]]];
+//    Article *article = [[Article alloc] initWithTitle:articleMO.title iconUrlStr:articleMO.iconUrl icon:[UIImage imageNamed:@"rss"] date:articleMO.date description:articleMO.articleDescr link:articleMO.articleLink images:[images mutableCopy] andVideoContent:[videoContent mutableCopy]];
+//    return article;
+//}
 
 - (void)checkingForLoadingChennelContent {
 //    NSLog(@"COUNT AFTER DELETE = %lu", [self.cdManager deleteAllObjects]);

@@ -13,9 +13,6 @@
   //                                              //NSMutableArray*
 - (NSArray *)parseArticlesDataIntoArticlesObjects:(NSArray *)fetchedDataForArticles tableView:(UITableView*)tableView {
     NSMutableArray *mutArticlse = [NSMutableArray array];
-    dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
-        
-//    NSMutableArray *mutArticlse = [NSMutableArray array];
     for(int i = 0; i < fetchedDataForArticles.count; i++) {
         NSDictionary *articleObj = [fetchedDataForArticles objectAtIndex:i];
         NSDictionary *dictWithIconUrlAndArtDescription = [self parseStringFromDescriptionTag:[articleObj valueForKey:kDescription]];
@@ -45,8 +42,7 @@
         }// else {NSAssert(errno, @"article.iconUrl ====== NILLLL in downloadTaskWith Method");}
         [mutArticlse addObject:article];
     }
-    });
-    
+
     return mutArticlse.copy;
 }
 

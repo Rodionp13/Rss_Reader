@@ -7,6 +7,7 @@
 //
 
 #import "MyXMLParser.h"
+#import "MyXMLParser+MyXMLParserTypeConvertingMethods.h"
 
 static NSString *const kItem = @"item";
 static NSString *const kTitle = @"title";
@@ -119,10 +120,16 @@ static NSString *const kMediaTypeMp4 = @"mp4";
 
 - (void)parserDidEndDocument:(NSXMLParser *)parser {
     NSArray *arrToParse = [NSArray arrayWithArray:self.articlesData];
-    [self.delegate parseFetchedDataIntoArticlesObjects:arrToParse];
+//    [self.delegate parseFetchedDataIntoArticlesObjects:arrToParse];//Delegate of ArticleVC
+    NSArray<Article*> *articlesObjects = [self parseArticlesDataIntoArticlesObjects:arrToParse];
+    
+    //AppMAnager Delegate TEST
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.delegate getArticlesDataAfterXMlParsing:articlesObjects];
+    });
 //    NSArray *articlesObjects = [self parseArticlesDataIntoArticlesObjects:arrToPass tableView:self.tableView];
 //    self.articles = articlesObjects.mutableCopy;
-    [self.delegate getArticlesDataAfterXMlParsing:arrToParse];
+    
     [self.articlesData removeAllObjects];
 }
 

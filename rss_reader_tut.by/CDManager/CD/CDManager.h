@@ -9,8 +9,12 @@
 #import <Foundation/Foundation.h>
 #import "ChannelMO+CoreDataClass.h"
 #import "ArticleMO+CoreDataClass.h"
+#import "ImageContentURLAndNameMO+CoreDataClass.h"
+#import "VideoContentURLAndNameMO+CoreDataClass.h"
 #import "AppDelegate.h"
 #import "APPManager.h"
+#import "Article.h"
+#import "Channel.h"
 
 //entities
 static NSString *const kArticleEnt = @"ArticleEnt";
@@ -46,5 +50,17 @@ static NSString *const kVideoContentArticleRel = @"article";
 - (void)addNewRecordsToDB:(NSDictionary *)channelGroups;
 - (NSDictionary *)parseMOinToObjects:(NSArray*)managedObjects;
 - (NSArray *)loadDataFromDBWithPredicate:(nullable NSPredicate*)predicate andDescriptor:(nullable NSArray<NSSortDescriptor*>*)sortDescriptors;
+- (void)convertArticlesMOinToArticlesObjects:(NSArray<ArticleMO*>*)articlesMO withComplitionBlock:(void(^)(NSMutableArray<Article*>*articlesArr))complition;
+- (void)addNewArticlesToChannel:(ChannelMO*)targetChannel articlesToAdd:(NSArray<Article*>*)articlse;
+
+
+
 - (NSUInteger) deleteAllObjects; //Utility method
+
+
+
+
+
+
+
 @end
