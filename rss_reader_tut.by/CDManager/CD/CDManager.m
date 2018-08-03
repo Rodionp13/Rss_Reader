@@ -36,8 +36,16 @@ static NSString *const kFreshNews = @"freshNews";
     return _appManager;
 }
 
-- (NSArray *)loadDataFromDBWithPredicate:(nullable NSPredicate*)predicate andDescriptor:(nullable NSArray<NSSortDescriptor*>*)sortDescriptors {
-    NSFetchRequest *request = [ChannelMO fetchRequest];
+- (NSArray *)loadDataFromDBWithPredicate:(nullable NSPredicate*)predicate andDescriptor:(nullable NSArray<NSSortDescriptor*>*)sortDescriptors forEntity:(EntityType)entityName {
+    NSFetchRequest *request;
+    switch (entityName) {
+        case 0: request = [ChannelMO fetchRequest]; break;
+        case 1: request = [ArticleMO fetchRequest]; break;
+        case 2: request = [ImageContentURLAndNameMO fetchRequest]; break;
+        case 3: request = [VideoContentURLAndNameMO fetchRequest]; break;
+        default: NSAssert(errno, @"Wrong Entity type(response from loadDataFromDBWithPredicate method)"); break;
+    }
+    
     [request setReturnsObjectsAsFaults:NO];
     if(predicate != nil) {[request setPredicate:predicate];}
     if(sortDescriptors != nil) {[request setSortDescriptors:sortDescriptors];}
@@ -54,20 +62,26 @@ static NSString *const kFreshNews = @"freshNews";
 }
 
 //Сейчас иди вниз и пиши конвертер из Article to ArticleMO!!!
-- (void)addNewArticlesToChannel:(ChannelMO*)targetChannelMO articlesToAdd:(NSArray<Article*>*)articlse {
+- (void)addNewArticlesToChannel:(ChannelMO*)targetChannelMO articlesToAdd:(NSArray<Article*>*)articlse channelSetIsEmpty:(BOOL)isEmpty {
     AppDelegate *appDelegate = (AppDelegate*)[UIApplication sharedApplication].delegate;
-    NSMutableSet *articlesMOArr = [NSMutableSet set];
+    NSMutableSet *articlesMOset = [NSMutableSet set];
     
     for(int i = 0; i < articlse.count; i++) {
         ArticleMO *articleMO = [self convertArticleInToMO:articlse[i]];
-        [articlesMOArr addObject: articleMO];
+        [articlesMOset addObject: articleMO];
     }
-    targetChannelMO.articles = articlesMOArr.copy;
+    if(isEmpty) {
+    targetChannelMO.articles = articlesMOset.copy;
+    } else {
+        [articlesMOset unionSet:targetChannelMO.articles];
+        targetChannelMO.articles = articlesMOset.copy;
+        
+    }
     [appDelegate saveContext];
 }
 
 - (void)addNewRecordsToDB:(NSDictionary *)channelsAndHeaders {
-    NSLog(@"=== BEFORE %lu", [[self loadDataFromDBWithPredicate:nil andDescriptor:nil] count]);
+    NSLog(@"=== BEFORE %lu", [[self loadDataFromDBWithPredicate:nil andDescriptor:nil forEntity:ChannelEnt] count]);
     NSArray *headers = [channelsAndHeaders valueForKey:kHeaders];
     NSArray *channelGroups = [channelsAndHeaders valueForKey:kChannels];
     AppDelegate *appDelegate = (AppDelegate*)[UIApplication sharedApplication].delegate;
@@ -87,7 +101,7 @@ static NSString *const kFreshNews = @"freshNews";
             [appDelegate saveContext];
         }
     }
-    NSLog(@"=== AFTER %lu", [[self loadDataFromDBWithPredicate:nil andDescriptor:nil] count]);
+    NSLog(@"=== AFTER %lu", [[self loadDataFromDBWithPredicate:nil andDescriptor:nil forEntity:ChannelEnt] count]);
     //check after parsing
 //    NSError *err;
 //    NSArray *result = [self.context executeFetchRequest:[ChannelMO fetchRequest] error:&err];
@@ -224,12 +238,12 @@ static NSString *const kFreshNews = @"freshNews";
 
 - (NSUInteger) deleteAllObjects {
     AppDelegate *appDelegate = (AppDelegate*)[UIApplication sharedApplication].delegate;
-    NSArray *arrToDelete = [self loadDataFromDBWithPredicate:nil andDescriptor:nil];
+    NSArray *arrToDelete = [self loadDataFromDBWithPredicate:nil andDescriptor:nil forEntity:ChannelEnt];
     for(ChannelMO *mo in arrToDelete) {
         [self.context deleteObject:mo];
         [appDelegate saveContext];
     }
-    NSUInteger count = [[self loadDataFromDBWithPredicate:nil andDescriptor:nil] count];
+    NSUInteger count = [[self loadDataFromDBWithPredicate:nil andDescriptor:nil forEntity:ChannelEnt] count];
     return count;
 }
 

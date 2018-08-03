@@ -43,15 +43,21 @@ static NSString *const kImageContentArticleRel = @"article";
 static NSString *const kVideoUrlAtr = @"videoUrl";
 static NSString *const kVideoContentArticleRel = @"article";
 
+typedef NS_ENUM(NSInteger, EntityType) {
+    ChannelEnt = 0,
+    ArticleEnt,
+    ImageContentURLAndNameEnt,
+    VideoContentURLAndNameEnt
+};
 
 
 @interface CDManager : NSObject
 
 - (void)addNewRecordsToDB:(NSDictionary *)channelGroups;
 - (NSDictionary *)parseMOinToObjects:(NSArray*)managedObjects;
-- (NSArray *)loadDataFromDBWithPredicate:(nullable NSPredicate*)predicate andDescriptor:(nullable NSArray<NSSortDescriptor*>*)sortDescriptors;
+- (NSArray *)loadDataFromDBWithPredicate:(nullable NSPredicate*)predicate andDescriptor:(nullable NSArray<NSSortDescriptor*>*)sortDescriptors forEntity:(EntityType)entityName;
 - (void)convertArticlesMOinToArticlesObjects:(NSArray<ArticleMO*>*)articlesMO withComplitionBlock:(void(^)(NSMutableArray<Article*>*articlesArr))complition;
-- (void)addNewArticlesToChannel:(ChannelMO*)targetChannel articlesToAdd:(NSArray<Article*>*)articlse;
+- (void)addNewArticlesToChannel:(ChannelMO*)targetChannelMO articlesToAdd:(NSArray<Article*>*)articlse channelSetIsEmpty:(BOOL)isEmpty;
 
 
 

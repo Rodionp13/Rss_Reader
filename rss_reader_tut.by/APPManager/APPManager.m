@@ -24,6 +24,10 @@ static NSString *const kDataBaseData = @"DataBaseData";
 @property(strong, nonatomic) HTMLParser *htmlParser;
 @property(strong, nonatomic) NSArray *fetchedDataAfterXmlParsing;
 @property(strong, nonatomic) ChannelMO *selectedChannel;
+//Test
+@property(strong, nonatomic) NSArray<ArticleMO*> *sortedArticles;
+@property(strong, nonatomic) NSArray<Article*> *convertedArticlesFromDb;
+@property(strong, nonatomic) NSArray<Article*> *downloadedArticles;
 @end
 
 @implementation APPManager
@@ -43,22 +47,16 @@ static NSString *const kDataBaseData = @"DataBaseData";
 }
 
 - (void)checkingForLoadingArticleContent:(NSURL*)urlForAllChannelsArticles {
-//    NSArray *res = [self.cdManager loadDataFromDBWithPredicate:nil andDescriptor:nil];
-//    NSLog(@"RELATIONSHIP RESULT\n%lu", res.count);
-//    for(int i = 0; i < res.count; i++) {
-//        ChannelMO *mo = res[i];
-//        NSSet<ArticleMO*> *artMO = mo.articles;
-//        NSLog(@"%lu", artMO.count);
-//        NSLog(@"CHANNEL:%@", mo.name);
-//        for(ArticleMO *art in artMO) {
-//            NSLog(@"SCOUP%@\n%@", art.title, art.articleLink);
-//        }
-//        
-//    }
-    NSArray *sortedAtricles = [self prepareAndGetSortedArticlesDataFromDb:urlForAllChannelsArticles];
+    NSArray *sortedAtricles = [self prepareAndGetSortedArticlesDataFromDb:urlForAllChannelsArticles]; self.sortedArticles = sortedAtricles;//set for future use
     if(sortedAtricles.count != 0) {
         [self.cdManager convertArticlesMOinToArticlesObjects:sortedAtricles withComplitionBlock:^(NSMutableArray<Article *> *articlesArr) {
-            [self.delegate complitionLoadingArticlesData:articlesArr];
+            [self.delegate complitionLoadingArticlesData:articlesArr]; self.convertedArticlesFromDb = articlesArr;
+            
+            [self firstDownloadArticlesContent:urlForAllChannelsArticles withComplitionBlock:^(NSMutableArray *articles) {
+                self.downloadedArticles = articles.copy;/*??? some response; for now don't know what exactcy it is to be...*/
+                
+            }];
+            
         }];
         //
         if([AppDelegate isNetworkAvailable]) {
@@ -66,9 +64,7 @@ static NSString *const kDataBaseData = @"DataBaseData";
              ........*/
         }
     } else if(sortedAtricles.count == 0) {
-        [self firstDownloadArticlesContent:urlForAllChannelsArticles withComplitionBlock:^(NSMutableArray *articles) {
-            //??? some response; for now don't know what exactcy it is to be...
-        }];
+        [self firstDownloadArticlesContent:urlForAllChannelsArticles withComplitionBlock:^(NSMutableArray *articles) {/*??? some response; for now don't know what exactcy it is to be...*/}];
         
     }
     
@@ -89,11 +85,33 @@ static NSString *const kDataBaseData = @"DataBaseData";
     }];
 }
 
+//Delegate CallBack from MyXMlParse obj
 - (void)getArticlesDataAfterXMlParsing:(NSArray *)fetchedXMlData {
 //    self.fetchedDataAfterXmlParsing = [NSArray arrayWithArray:fetchedXMlData];// USELESS for now
-    [self.delegate complitionLoadingArticlesData:fetchedXMlData.mutableCopy];
     
-    [self.cdManager addNewArticlesToChannel:self.selectedChannel articlesToAdd:fetchedXMlData];
+    //Case When there are no objects in persistent Store
+    if(self.sortedArticles.count == 0) {
+    [self.delegate complitionLoadingArticlesData:fetchedXMlData.mutableCopy];
+    [self.cdManager addNewArticlesToChannel:self.selectedChannel articlesToAdd:fetchedXMlData channelSetIsEmpty:YES];
+    }
+    //Case when there are some objects in persistent Store
+    else {
+        //compare convertedArticles with downloadedArticles
+        //if there is some mismatches --->  show them on UI
+        //then store them in persistent Store.
+        NSArray *downloaded = [NSArray arrayWithArray:self.downloadedArticles]; NSArray *converted = [NSArray arrayWithArray:self.convertedArticlesFromDb];
+        NSArray *newArticles = [self compareDownloadedArticlesWithDataBaseArticles:downloaded dataBaseArticles:converted];
+        if(newArticles.count != 0) {
+            NSArray *arrToUpdate = [fetchedXMlData arrayByAddingObjectsFromArray:newArticles];
+            [self.delegate complitionLoadingArticlesData:arrToUpdate.mutableCopy];
+            [self.cdManager addNewArticlesToChannel:self.selectedChannel articlesToAdd:newArticles channelSetIsEmpty:NO];
+        }
+        
+        
+    }
+    
+    
+    
 }
 
 - (NSArray *)prepareAndGetSortedArticlesDataFromDb:(NSURL*)channelUrl {
@@ -110,7 +128,7 @@ static NSString *const kDataBaseData = @"DataBaseData";
 - (NSArray *)getSelectedChannelFromDb:(NSURL*)channelUrl {
     
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@",kChannelUrlAtr,[channelUrl absoluteString]];
-    NSArray *selectedChannel = [self.cdManager loadDataFromDBWithPredicate:predicate andDescriptor:nil];
+    NSArray *selectedChannel = [self.cdManager loadDataFromDBWithPredicate:predicate andDescriptor:nil forEntity:ChannelEnt];
     if(selectedChannel.count > 1) {NSAssert(errno, @"Count of Channel Array > 1 response from getSelectedChannelFromDb: method");}
     self.selectedChannel = [selectedChannel lastObject];
     return selectedChannel;
@@ -144,7 +162,7 @@ static NSString *const kDataBaseData = @"DataBaseData";
     
     NSURL *url = [NSURL URLWithString:kChannelsLink];
     NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:kChannelGroupAtr ascending:YES];
-    NSArray *dataFromDB = [self.cdManager loadDataFromDBWithPredicate:nil andDescriptor:@[descriptor]];
+    NSArray *dataFromDB = [self.cdManager loadDataFromDBWithPredicate:nil andDescriptor:@[descriptor] forEntity:ChannelEnt];
     NSLog(@"%lu == dataFromDb,\n%@", dataFromDB.count, [[dataFromDB lastObject] valueForKey:@"name"]);
     
     if(dataFromDB.count > 0) {// core data.count != 0 && networkConnection isAvailable
@@ -205,7 +223,7 @@ static NSString *const kDataBaseData = @"DataBaseData";
         NSArray *channelsForSpesifiedGroup = groupChannels[i];
         for(Channel *channel in channelsForSpesifiedGroup) {
             NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @"url", channel.url];
-            NSArray *oldChannels = [self.cdManager loadDataFromDBWithPredicate:predicate andDescriptor:nil];
+            NSArray *oldChannels = [self.cdManager loadDataFromDBWithPredicate:predicate andDescriptor:nil forEntity:ChannelEnt];
             if(oldChannels.count > 1) {NSAssert(errno, @"there is more than one elem in Db %lu", oldChannels.count);}
             if(oldChannels.count == 0) {
                 [newChannelsToAddinDb addObject:channel];
@@ -215,4 +233,46 @@ static NSString *const kDataBaseData = @"DataBaseData";
     return newChannelsToAddinDb.copy;
 }
 
+- (NSArray*)compareDownloadedArticlesWithDataBaseArticles:(NSArray*)downloadedArticles dataBaseArticles:(NSArray*)convertedAtricles {
+    NSMutableArray *newArticles = [NSMutableArray array];
+    for(int i = 0; i < downloadedArticles.count; i++) {
+        Article *downloadedArticle = downloadedArticles[i];
+        NSString *articleLinkDownloaded = downloadedArticle.articleLink.absoluteString;
+        NSLog(@"DLink:%@", articleLinkDownloaded);
+        
+        for(int j = 0; j < convertedAtricles.count; j++) {
+            Article *convertedArticle = convertedAtricles[j];
+            NSString *articleLinkConverted = convertedArticle.articleLink.absoluteString;
+            NSLog(@"CLink:%@", articleLinkConverted);
+            BOOL isMatched = [articleLinkDownloaded isEqualToString:articleLinkConverted];
+            
+            if(!isMatched) {
+                [newArticles addObject:downloadedArticle];
+            }
+        }
+    }
+    
+    return newArticles.copy;
+}
+
 @end
+
+
+
+
+
+//CORE DATE TEST
+
+//    NSArray *res = [[(AppDelegate*)[UIApplication sharedApplication].delegate persistentContainer].viewContext executeFetchRequest:[NSFetchRequest fetchRequestWithEntityName:kArticleEnt] error:nil];
+//    NSLog(@"RELATIONSHIP RESULT\n%lu", res.count);
+//    for(ArticleMO *artMO in res) {
+//        NSLog(@"TITLE %@", artMO.title);
+//        NSSet *images = artMO.imageContentURLsAndNames;
+//        for(ImageContentURLAndNameMO*image in images) {
+//            NSLog(@"IMAGE %@", image.imageUrl);
+//        }
+//    }
+
+
+
+
