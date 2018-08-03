@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "Article.h"
 
-@protocol MyXMLParseDelegate
+@protocol RLMyDelegate
 
 - (void) parseFetchedDataIntoArticlesObjects:(NSArray *)fetchedArticleData;
 - (void) getArticlesDataAfterXMlParsing:(NSArray<Article*>*)fetchedXMlData;
@@ -18,7 +18,7 @@
 @interface MyXMLParser : NSObject
 @property(strong, nonatomic) NSURL *url;
 @property(strong, nonatomic, readonly) NSXMLParser *myXMLParser;
-@property(weak, nonatomic) id <MyXMLParseDelegate> delegate;
+@property(weak, nonatomic) id <RLMyDelegate> delegate;
 
 - (id) initWithUrl:(NSURL*)url;
 @end

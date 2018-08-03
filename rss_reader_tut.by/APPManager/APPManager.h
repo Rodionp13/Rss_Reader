@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MyXMLParser.h"
 
 @protocol APPManagerDelegate
 @optional
@@ -15,7 +16,7 @@
 @end
 
 
-@interface APPManager : NSObject
+@interface APPManager : NSObject <RLMyDelegate>
 @property(weak, nonatomic) id <APPManagerDelegate> delegate;
 
 - (void)checkingForLoadingChennelContent;

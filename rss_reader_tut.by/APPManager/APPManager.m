@@ -19,7 +19,7 @@ static NSString *const kChannelsLink = @"https://news.tut.by/rss.html";
 static NSString *const kDownloadedData = @"DownloadedData";
 static NSString *const kDataBaseData = @"DataBaseData";
 
-@interface APPManager() <MyXMLParseDelegate>
+@interface APPManager()
 @property(strong, nonatomic) CDManager *cdManager;
 @property(strong, nonatomic) HTMLParser *htmlParser;
 @property(strong, nonatomic) NSArray *fetchedDataAfterXmlParsing;
@@ -48,6 +48,15 @@ static NSString *const kDataBaseData = @"DataBaseData";
 
 - (void)checkingForLoadingArticleContent:(NSURL*)urlForAllChannelsArticles {
     NSArray *sortedAtricles = [self prepareAndGetSortedArticlesDataFromDb:urlForAllChannelsArticles]; self.sortedArticles = sortedAtricles;//set for future use
+    NSLog(@"COUNT ARTICLES: %@", sortedAtricles.count);
+    for(ArticleMO*artMO in sortedAtricles) {
+        NSLog(@"TITLE:%@", artMO.title);
+        NSArray *images = [artMO.imageContentURLsAndNames allObjects];
+        for(int i = 0; i < images.count; i++) {
+             *image = images[i];
+            NSLog(@"IMAGE:%@\n", image.imageUrl);
+        }
+    }
     if(sortedAtricles.count != 0) {
         [self.cdManager convertArticlesMOinToArticlesObjects:sortedAtricles withComplitionBlock:^(NSMutableArray<Article *> *articlesArr) {
             [self.delegate complitionLoadingArticlesData:articlesArr]; self.convertedArticlesFromDb = articlesArr;
