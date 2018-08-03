@@ -37,7 +37,8 @@
     NSURL *documentsDirectory = [urls objectAtIndex:0];
     NSURL *originalUrl = [NSURL URLWithString:[location lastPathComponent]];
     NSURL *destinationUrl = [documentsDirectory URLByAppendingPathComponent:[originalUrl lastPathComponent]];
-    
+    NSLog(@"LOCATION %@", location);
+    NSLog(@"DESTINATION %@", destinationUrl);
 //    NSString *urlToNewDirect = [[documentsDirectory URLByAppendingPathComponent:@"myNewDir"] path];
 //    NSError *creationErr;
 //    [fileManager createDirectoryAtPath:urlToNewDirect withIntermediateDirectories:YES attributes:nil error:&creationErr];

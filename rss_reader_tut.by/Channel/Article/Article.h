@@ -19,6 +19,6 @@
 @property(strong, nonatomic) NSMutableArray *imageContentURLsAndNames;
 @property(strong, nonatomic) NSMutableArray *videoContentURLsAndNames;
 
-- (id)initWithTitle:(NSString *)title iconUrlStr:(NSString *)iconUrlString icon:(UIImage *)icon date:(NSString *)date description:(NSString *)description link:(NSString *)link images:(NSMutableArray *)images andVideoContent:(NSMutableArray *)videoContent;
+- (id)initWithTitle:(NSString *)title iconUrl:(NSURL *)iconUrl icon:(UIImage *)icon date:(NSString *)date description:(NSString *)description link:(NSString *)link images:(NSMutableArray *)images andVideoContent:(NSMutableArray *)videoContent;
 
 @end

@@ -90,7 +90,8 @@ static NSString *const kMediaTypeMp4 = @"mp4";
 //        icon = [UIImage imageNamed:@"rss"];
 //    }
     
-    cell.imageView.image = article.icon;
+//    cell.imageView.image = article.icon;
+    cell.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:article.iconUrl]];
     [cell.textLabel setText:article.title];
     [cell.detailTextLabel setText:article.articleDescr];
     
@@ -103,10 +104,10 @@ static NSString *const kMediaTypeMp4 = @"mp4";
     return self.view.frame.size.height / 7;
 }
 
-- (void)parseFetchedDataIntoArticlesObjects:(NSArray *)fetchedArticleData {
-    NSArray *articles = [self parseArticlesDataIntoArticlesObjects:fetchedArticleData tableView:self.tableView];
-    self.articles = [articles mutableCopy];
-}
+//- (void)parseFetchedDataIntoArticlesObjects:(NSArray *)fetchedArticleData {
+//    NSArray *articles = [self parseArticlesDataIntoArticlesObjects:fetchedArticleData tableView:self.tableView];
+//    self.articles = [articles mutableCopy];
+//}
 
 
 

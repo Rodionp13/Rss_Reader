@@ -193,8 +193,16 @@ static NSString *const kFreshNews = @"freshNews";
 
 - (Article*)getArticle:(ArticleMO*)articleMO images:(NSArray*)images videoContent:(NSArray*)videoContent  {
 //    [UIImage imageNamed:@"rss"]
+    NSLog(@"%@", articleMO.iconUrl);
+    NSFileManager *fm  = [NSFileManager defaultManager];
+    NSURL *documentDirectory = [[fm URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] objectAtIndex:0];
+    NSLog(@"%@",documentDirectory);
+    NSString *iconUrlStr = [articleMO.iconUrl lastPathComponent];
+    NSURL *iconURL = [documentDirectory URLByAppendingPathComponent:iconUrlStr];
+    NSLog(@"%@", iconURL);
+                                                                      //articleMO.iconUrl
     UIImage *icon = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:articleMO.iconUrl]]];
-    Article *article = [[Article alloc] initWithTitle:articleMO.title iconUrlStr:articleMO.iconUrl icon:icon date:articleMO.date description:articleMO.articleDescr link:articleMO.articleLink images:[images mutableCopy] andVideoContent:[videoContent mutableCopy]];
+    Article *article = [[Article alloc] initWithTitle:articleMO.title iconUrl:iconURL icon:icon date:articleMO.date description:articleMO.articleDescr link:articleMO.articleLink images:[images mutableCopy] andVideoContent:[videoContent mutableCopy]];
     return article;
 }
 
@@ -202,6 +210,7 @@ static NSString *const kFreshNews = @"freshNews";
     ArticleMO *articleMO = [[ArticleMO alloc] initWithEntity:[NSEntityDescription entityForName:kArticleEnt inManagedObjectContext:self.context] insertIntoManagedObjectContext:self.context];
     NSArray *imageContent = [self getImageContentOfArticle:article];
     NSArray *videoContent = [self getVideoContentOfArticle:article];
+    
     
     articleMO.title = article.title;
     articleMO.iconUrl = article.iconUrl.absoluteString;

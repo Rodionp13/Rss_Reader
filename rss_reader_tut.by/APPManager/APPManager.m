@@ -48,35 +48,31 @@ static NSString *const kDataBaseData = @"DataBaseData";
 
 - (void)checkingForLoadingArticleContent:(NSURL*)urlForAllChannelsArticles {
     NSArray *sortedAtricles = [self prepareAndGetSortedArticlesDataFromDb:urlForAllChannelsArticles]; self.sortedArticles = sortedAtricles;//set for future use
-    NSLog(@"COUNT ARTICLES: %@", sortedAtricles.count);
+    NSLog(@"COUNT ARTICLES: %lu", sortedAtricles.count);
     for(ArticleMO*artMO in sortedAtricles) {
         NSLog(@"TITLE:%@", artMO.title);
         NSArray *images = [artMO.imageContentURLsAndNames allObjects];
-        for(int i = 0; i < images.count; i++) {
-             *image = images[i];
+        for(ImageContentURLAndNameMO *image in images) {
             NSLog(@"IMAGE:%@\n", image.imageUrl);
         }
     }
     if(sortedAtricles.count != 0) {
         [self.cdManager convertArticlesMOinToArticlesObjects:sortedAtricles withComplitionBlock:^(NSMutableArray<Article *> *articlesArr) {
             [self.delegate complitionLoadingArticlesData:articlesArr]; self.convertedArticlesFromDb = articlesArr;
-            
-            [self firstDownloadArticlesContent:urlForAllChannelsArticles withComplitionBlock:^(NSMutableArray *articles) {
-                self.downloadedArticles = articles.copy;/*??? some response; for now don't know what exactcy it is to be...*/
-                
-            }];
+//            if([AppDelegate isNetworkAvailable]) {
+//            [self firstDownloadArticlesContent:urlForAllChannelsArticles withComplitionBlock:^(NSMutableArray *articles) {
+//                self.downloadedArticles = articles.copy;/*??? some response; for now don't know what exactcy it is to be...*/
+//            }];
+//            }
             
         }];
-        //
-        if([AppDelegate isNetworkAvailable]) {
-            /*Than download data and compare it with CD data
-             ........*/
-        }
+        
     } else if(sortedAtricles.count == 0) {
-        [self firstDownloadArticlesContent:urlForAllChannelsArticles withComplitionBlock:^(NSMutableArray *articles) {/*??? some response; for now don't know what exactcy it is to be...*/}];
+        if([AppDelegate isNetworkAvailable]) {
+            [self firstDownloadArticlesContent:urlForAllChannelsArticles withComplitionBlock:^(NSMutableArray *articles) {/*??? some response; for now don't know what exactcy it is to be...*/}];
+        } else {NSLog(@"NO CONNECTION AND NO DATA IN PERSISTENT STORE!");}
         
     }
-    
     
     
 //    [Downloader downloadTaskWith:urlForAllChannelsArticles handler:^(NSURL *destinationUrl) {

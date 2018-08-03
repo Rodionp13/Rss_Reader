@@ -121,12 +121,14 @@ static NSString *const kMediaTypeMp4 = @"mp4";
 - (void)parserDidEndDocument:(NSXMLParser *)parser {
     NSArray *arrToParse = [NSArray arrayWithArray:self.articlesData];
 //    [self.delegate parseFetchedDataIntoArticlesObjects:arrToParse];//Delegate of ArticleVC
-    NSArray<Article*> *articlesObjects = [self parseArticlesDataIntoArticlesObjects:arrToParse];
+    NSArray<Article*> *articlesObjects = [self parseArticlesDataIntoArticlesObjects:arrToParse withComplition:^(NSArray *myRes) {
+        [self.delegate getArticlesDataAfterXMlParsing:myRes];
+    }];
     
     //AppMAnager Delegate TEST
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.delegate getArticlesDataAfterXMlParsing:articlesObjects];
-    });
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        [self.delegate getArticlesDataAfterXMlParsing:articlesObjects];
+//    });
 //    NSArray *articlesObjects = [self parseArticlesDataIntoArticlesObjects:arrToPass tableView:self.tableView];
 //    self.articles = articlesObjects.mutableCopy;
     
