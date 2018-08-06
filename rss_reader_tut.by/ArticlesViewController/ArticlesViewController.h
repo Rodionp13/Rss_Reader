@@ -13,6 +13,7 @@
 #import "ArticleCell.h"
 #import "FirstCell.h"
 #import "Downloader.h"
+#import "RLDetailedArticleViewController.h"
 
 static NSString *const kItem = @"item";
 static NSString *const kTitle = @"title";

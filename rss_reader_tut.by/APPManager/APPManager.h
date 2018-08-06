@@ -21,6 +21,7 @@
 
 - (void)checkingForLoadingChennelContent;
 - (void)checkingForLoadingArticleContent:(NSURL*)urlForAllChannelsArticles;
+- (void)checkingForLoadingNews:(Article*)article complition:(void(^)(NSMutableArray*images))complitionBlock;
 @end
 
 //@property(strong, nonatomic) id <APPManagerCoreDateDelegate> cdDelegate;

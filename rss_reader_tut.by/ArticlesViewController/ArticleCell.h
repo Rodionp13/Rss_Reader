@@ -7,12 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Article.h"
 
 @interface ArticleCell : UITableViewCell
-@property(strong, nonatomic) UILabel *nameLbl;
-@property(strong, nonatomic) UILabel *date;
 @property(strong, nonatomic) UIImageView *myImageView;
 
-//- (void) configureCellWithTitleText:(NSString *)textLabel data:(NSString *)date;
-//- (UIImageView*) configureCellImage;
+- (void) configureCellImage:(UIImage*)article;
 @end

@@ -63,7 +63,7 @@ static NSString *const kChannelsLink = @"https://news.tut.by/rss.html";
     self.appManager.delegate = self;
     [self.appManager checkingForLoadingChennelContent];
     
-    self.myTable = [[UITableView alloc] initWithFrame:self.view.frame];
+    self.myTable = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStylePlain];
     [self.myTable setDelegate:self];
     [self.myTable setDataSource:self];
     [self.myTable registerClass:[FirstCell class] forCellReuseIdentifier:kCellId];
@@ -95,10 +95,12 @@ static NSString *const kChannelsLink = @"https://news.tut.by/rss.html";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     FirstCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellId forIndexPath:indexPath];
     Channel *channel = [[self.channels objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-    cell.textLabel.text = channel.name;
-    cell.imageView.image = [UIImage imageNamed:@"rss"];
+    [cell configureCellImage];
+    cell.textLabel.text =  channel.name;
+    cell.separatorInset = UIEdgeInsetsMake(0, 50, 0, 0);
     return cell;
 }
+
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     Channel *channel = [self.channels objectAtIndex:indexPath.section][indexPath.row];
@@ -109,29 +111,16 @@ static NSString *const kChannelsLink = @"https://news.tut.by/rss.html";
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
-/*
- NSLog(@"Channel COUNT %lu", [self.channels[indexPath.section] count]);
- NSLog(@"Ind Path %@", indexPath);
- 
- NSLog(@"%@", [[self.channels objectAtIndex:indexPath.section] class]);
- NSLog(@"%@", channel);
- */
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UILabel *headerView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 40)];
     [headerView setTextAlignment:NSTextAlignmentCenter];
-    [headerView setBackgroundColor:UIColor.whiteColor];
-    [headerView.layer setBorderWidth:3];
+    [headerView setBackgroundColor:UIColor.lightGrayColor];
+    [headerView.layer setBorderWidth:2];
     [headerView.layer setBackgroundColor:UIColor.blackColor.CGColor];
-    [headerView.layer setCornerRadius:20];
     [headerView setText:self.headers[section]];
-//    [tableView setTableHeaderView:headerView];
     return headerView;
 }
-
-//- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-//    return self.headers[section];
-//}
 
 
 
@@ -144,7 +133,7 @@ static NSString *const kChannelsLink = @"https://news.tut.by/rss.html";
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-        return self.view.frame.size.height / 13;
+        return self.view.frame.size.height / 20;
 }
 
 - (void)setUpContraintsForTable {

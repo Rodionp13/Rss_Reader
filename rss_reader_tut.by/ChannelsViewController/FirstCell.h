@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Channel.h"
 
 @interface FirstCell : UITableViewCell
-@property(strong, nonatomic) UILabel *nameLbl;
+@property(strong, nonatomic) UILabel *titleLbl;
 @property(strong, nonatomic) UIImageView *myImageView;
 
-- (void) configureCellWithTitleText:(NSString *)textLabel;
+- (void) configureCellImage;
 @end

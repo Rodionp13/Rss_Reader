@@ -19,52 +19,25 @@
     [super setSelected:selected animated:animated];
 }
 
-//- (void)prepareForReuse {
-//}
+- (void) configureCellImage:(UIImage*)img {
+    if(_myImageView == nil) {
+        _myImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+        _myImageView.image = img;
+        [self.myImageView setClipsToBounds:YES];
+        [self.contentView addSubview:self.myImageView];
+        [self setUpConstraints];
+    }
+}
 
-//- (void) configureCellWithTitleText:(NSString *)textLabel data:(NSString *)date {
-//    if(self.myImageView != nil) {
-//        [self.myImageView removeFromSuperview];
-//    }
-//    [self configureCellImage];
-//    [self configureCellLabel:textLabel date:date];
-////    [self configureCellDate:date];
-//}
-//
-//- (UIImageView*) configureCellImage {
-//    self.myImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-//    [self.myImageView.layer setBorderWidth:5];
-//    [self.myImageView.layer setBorderColor:UIColor.blueColor.CGColor];
-//    [self.myImageView.layer setCornerRadius:15];
-//    return self.myImageView;
-//}
-//
-////- (void)deleteAll {
-////    [self.myImageView removeFromSuperview];
-////    [self.nameLbl removeFromSuperview];
-////    [self.date removeFromSuperview];
-////}
-//
-//- (void) configureCellLabel:(NSString *)textlabel date:(NSString *)date {
-////    self.nameLbl = [[UILabel alloc] initWithFrame:CGRectMake(self.imageView.frame.size.width + 50, self.imageView.center.y, 300, 20)];
-////    [self.nameLbl.layer setBorderWidth:1];
-////    [self.nameLbl.layer setBorderColor:UIColor.blueColor.CGColor];
-////    [self.nameLbl.layer setCornerRadius:15];
-////    self.nameLbl.text = textlabel;
-//
-////    [self addSubview:self.nameLbl];
-//    [self.textLabel setText:textlabel];
-//    [self.detailTextLabel setText:date];
-//}
-//
-////- (void) configureCellDate:(NSString *)date {
-////    self.date = [[UILabel alloc] initWithFrame:CGRectMake(self.frame.size.width - 50, self.frame.size.height / 2, 50, 20)];
-////    [self.date.layer setBorderWidth:2];
-////    [self.date.layer setBorderColor:UIColor.blueColor.CGColor];
-////    [self.date.layer setCornerRadius:15];
-////    self.date.text = date;
-////
-////    [self addSubview:self.date];
-////}
+- (void) setUpConstraints {
+    self.myImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    UILayoutGuide *safeArea = self.safeAreaLayoutGuide;
+    NSLayoutConstraint *top = [self.myImageView.topAnchor constraintEqualToAnchor:safeArea.topAnchor constant:10];
+    NSLayoutConstraint *leading = [self.myImageView.leadingAnchor constraintEqualToAnchor:safeArea.leadingAnchor constant:8];
+    NSLayoutConstraint *bottom = [self.myImageView.bottomAnchor constraintEqualToAnchor:safeArea.bottomAnchor constant:10];
+    NSLayoutConstraint *width = [self.myImageView.widthAnchor constraintEqualToAnchor:safeArea.widthAnchor multiplier:0.25 constant:0];
+    [NSLayoutConstraint activateConstraints:@[top, leading, bottom, width]];
+}
+
 
 @end
