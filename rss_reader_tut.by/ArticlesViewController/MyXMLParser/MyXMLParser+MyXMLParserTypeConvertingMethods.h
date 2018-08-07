@@ -11,6 +11,5 @@
 
 @interface MyXMLParser (MyXMLParserTypeConvertingMethods)
 
-//- (NSArray<Article*>*)parseArticlesDataIntoArticlesObjects:(NSArray*)fetchedDataForArticles;
 - (NSArray<Article*>*)parseArticlesDataIntoArticlesObjects:(NSArray *)fetchedDataForArticles withComplition:(void(^)(NSArray*myRes))complitionBLock;
 @end

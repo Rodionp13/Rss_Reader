@@ -11,7 +11,7 @@
 #import "ArticlesViewController.h"
 
 @implementation MyXMLParser (MyXMLParserTypeConvertingMethods)
-                                              //NSMutableArray*
+
 - (NSArray<Article*>*)parseArticlesDataIntoArticlesObjects:(NSArray *)fetchedDataForArticles withComplition:(void(^)(NSArray*myRes))complitionBLock {
     NSMutableArray<Article*> *mutArticlse = [NSMutableArray array];
     
@@ -20,47 +20,24 @@
             NSDictionary *dictWithIconUrlAndArtDescription = [self parseStringFromDescriptionTag:[articleObj valueForKey:kDescription]];
             NSString *strIconUrl = [dictWithIconUrlAndArtDescription valueForKey:@"url"];
             NSString *artDescription = [dictWithIconUrlAndArtDescription valueForKey:@"shortDescription"];
-            NSLog(@"HTTPS URL: %@", strIconUrl);
-            if(artDescription == nil) {
-                artDescription = @"NO Description";
-            }
-
-            //Initialization of artilce instance
-//            UIImage *icon = [UIImage imageNamed:@"rss"];
-//            NSURL *iconURL = [NSURL URLWithString:strIconUrl];
-//             Article *article = [[Article alloc] initWithTitle:[articleObj valueForKey:kTitle] iconUrl:iconURL icon:icon date:[articleObj valueForKey:kPubDate] description:artDescription link:[articleObj valueForKey:kLink] images:[articleObj valueForKey:kMediaContent] andVideoContent:[articleObj valueForKey:kVideoContent]];
+            if(artDescription == nil) {artDescription = @"NO Description";}
             
-            //article.iconUrl
             if([AppDelegate isNetworkAvailable]) {
             if([NSURL URLWithString:strIconUrl] != nil) {
-               [Downloader downloadTaskWith:[NSURL URLWithString:strIconUrl] handler:^(NSURL *destinationUrl) {//article.iconUrl
+               [Downloader downloadTaskWith:[NSURL URLWithString:strIconUrl] handler:^(NSURL *destinationUrl) {
                     if(destinationUrl != nil) {
-                        NSLog(@"DESTINATION FROM XML %@", destinationUrl);
-//                        dispatch_async(dispatch_get_main_queue(), ^{
-                            Article *article = [[Article alloc] initWithTitle:[articleObj valueForKey:kTitle] iconUrl:destinationUrl icon:[UIImage imageWithData:[NSData dataWithContentsOfURL:destinationUrl]] date:[articleObj valueForKey:kPubDate] description:artDescription link:[articleObj valueForKey:kLink] images:[articleObj valueForKey:kMediaContent] andVideoContent:[articleObj valueForKey:kVideoContent]];
+                            Article *article = [[Article alloc] initWithTitle:[articleObj valueForKey:kTitle] iconUrl:destinationUrl date:[articleObj valueForKey:kPubDate] description:artDescription link:[articleObj valueForKey:kLink] images:[articleObj valueForKey:kMediaContent]];
                             [mutArticlse addObject:article];
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            if(i == fetchedDataForArticles.count - 1) {
-                                complitionBLock(mutArticlse.copy);
-                            }
-                        });
-                        
-//                            article.iconUrl = destinationUrl.copy;
-//                            article.icon = [UIImage imageWithData:[NSData dataWithContentsOfURL:destinationUrl]];
-//                        });
-                        
-                        
                         if(i == fetchedDataForArticles.count - 1) {
                             dispatch_async(dispatch_get_main_queue(), ^{
+                                complitionBLock(mutArticlse.copy);
                                 [[NSNotificationCenter defaultCenter] postNotificationName:@"updateTable" object:nil];
                             }); }
                     }
                 }];
-//                article.iconUrl = url;
-            }// else {NSAssert(errno, @"article.iconUrl ====== NILLLL in downloadTaskWith Method");}
+            }
         }
             
-//            [mutArticlse addObject:article];
         }
     
     return mutArticlse.copy;
@@ -90,7 +67,6 @@
             }
         }
     }
-    //    NSLog(@"%@\n%@", [[result allValues] firstObject], [[result allValues] lastObject]);
     return [result copy];
 }
 

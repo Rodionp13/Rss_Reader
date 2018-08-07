@@ -37,29 +37,11 @@
     NSURL *documentsDirectory = [urls objectAtIndex:0];
     NSURL *originalUrl = [NSURL URLWithString:[location lastPathComponent]];
     NSURL *destinationUrl = [documentsDirectory URLByAppendingPathComponent:[originalUrl lastPathComponent]];
-    NSLog(@"LOCATION %@", location);
-    NSLog(@"DESTINATION %@", destinationUrl);
-//    NSString *urlToNewDirect = [[documentsDirectory URLByAppendingPathComponent:@"myNewDir"] path];
-//    NSError *creationErr;
-//    [fileManager createDirectoryAtPath:urlToNewDirect withIntermediateDirectories:YES attributes:nil error:&creationErr];
-//    if(creationErr != nil) {
-//        NSLog(@"Failed to create directory\n%@\n%@", creationErr, creationErr.localizedDescription);
-//    } else {
-//        NSLog(@"%@", [NSURL URLWithString:urlToNewDirect]);
-//    }
     
     
     NSError *err;
     [fileManager copyItemAtURL:location toURL:destinationUrl error:&err];
     [self printError:err withDescr:@"Failed to copy item"];
-    NSLog(@"%@", location);
-    NSLog(@"%@", destinationUrl);
-    
-//    NSError *removeErr;
-//    if(![fileManager removeItemAtURL:destinationUrl error:&removeErr]) {
-//        NSLog(@"Failed to remove iconImage from documents\n%@\n%@", removeErr, removeErr.localizedDescription);
-//    }
-    
     return destinationUrl;
 }
 

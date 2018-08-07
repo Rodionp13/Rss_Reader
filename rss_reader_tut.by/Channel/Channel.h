@@ -15,5 +15,4 @@
 @property(strong, nonatomic) UIImageView *imageView;
 
 - (id)initWithName:(NSString *)name url:(NSString *)url;
-//- (void)configureImage;
 @end

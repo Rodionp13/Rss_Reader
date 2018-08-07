@@ -16,7 +16,6 @@
     if(self) {
         _name = name;
         _url = url;
-//        _imageView = [[UIImageView alloc] initWithImage:image];
     }
     
     return self;

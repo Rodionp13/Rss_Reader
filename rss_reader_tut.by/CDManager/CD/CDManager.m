@@ -90,9 +90,6 @@ static NSString *const kFreshNews = @"freshNews";
         NSArray *channels = channelGroups[i];
         for(int j = 0; j < channels.count; j++) {
             
-//            NSEntityDescription *entityDescr = [NSEntityDescription entityForName:kChannelEnt inManagedObjectContext:self.context];
-//            ChannelMO *newChannelMO = [[ChannelMO alloc] initWithEntity:entityDescr insertIntoManagedObjectContext:self.context];
-            
             id channel = [channels objectAtIndex:j];
             NSString *channelGroup = headers[i];
             
@@ -102,30 +99,13 @@ static NSString *const kFreshNews = @"freshNews";
         }
     }
     NSLog(@"=== AFTER %lu", [[self loadDataFromDBWithPredicate:nil andDescriptor:nil forEntity:ChannelEnt] count]);
-    //check after parsing
-//    NSError *err;
-//    NSArray *result = [self.context executeFetchRequest:[ChannelMO fetchRequest] error:&err];
-//    if(err != nil) {
-//        NSLog(@"Fail((");
-//    } else {
-//        NSLog(@"RESULT FROM CD == %lu", result.count);
-//        for(ChannelMO *channel in result) {
-//            NSLog(@"%@", channel.name);
-//        }
-//    }
-    
 }
 
 - (NSDictionary *)parseMOinToObjects:(NSArray*)managedObjects {
     NSMutableOrderedSet *headers = [NSMutableOrderedSet orderedSet];
     NSMutableArray *gorupOfChannels = [NSMutableArray array];
     NSMutableArray *subChannels = [NSMutableArray array];
-    
-//    NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:kChannelGroup ascending:YES];
     NSArray *channelsSortedByGroup = managedObjects;
-//    NSLog(@"%lu,%@", channelsSortedByGroup.count, channelsSortedByGroup);
-    
-//    dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
     
     for(int i = 0; i < channelsSortedByGroup.count; i++) {
         NSString *sortedChannelGroupProperty = [[channelsSortedByGroup objectAtIndex:i] channelGroup];
@@ -135,7 +115,7 @@ static NSString *const kFreshNews = @"freshNews";
         if((i+1) != channelsSortedByGroup.count) {
         secondSortedChannelGroupProperty = [[channelsSortedByGroup objectAtIndex:i + 1] channelGroup];
         } else {
-            secondSortedChannelGroupProperty = sortedChannelGroupProperty.copy;//[[channelsSortedByGroup objectAtIndex:i] channelGroup]
+            secondSortedChannelGroupProperty = sortedChannelGroupProperty.copy;
         }
         Channel *newChannel = [self convertMOinToObj:[channelsSortedByGroup objectAtIndex:i]];
         [subChannels addObject:newChannel];
@@ -147,12 +127,6 @@ static NSString *const kFreshNews = @"freshNews";
             [subChannels removeAllObjects];
         }
     }
-//    });
-//    NSLog(@"%lu, %@", headers.count,headers);
-//    NSArray *arr = [gorupOfChannels objectAtIndex:0];
-//    NSLog(@"%@", [[arr objectAtIndex:0] name]);
-//    NSLog(@"");
-//    NSLog(@"");
     
     return @{kHeaders:headers,kChannels:gorupOfChannels};
 }
@@ -192,24 +166,26 @@ static NSString *const kFreshNews = @"freshNews";
 }
 
 - (Article*)getArticle:(ArticleMO*)articleMO images:(NSArray*)images videoContent:(NSArray*)videoContent  {
-//    [UIImage imageNamed:@"rss"]
-    NSLog(@"%@", articleMO.iconUrl);
     NSFileManager *fm  = [NSFileManager defaultManager];
     NSURL *documentDirectory = [[fm URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] objectAtIndex:0];
-    NSLog(@"%@",documentDirectory);
     NSString *iconUrlStr = [articleMO.iconUrl lastPathComponent];
     NSURL *iconURL = [documentDirectory URLByAppendingPathComponent:iconUrlStr];
-    NSLog(@"%@", iconURL);
-                                                                      //articleMO.iconUrl
-    UIImage *icon = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:articleMO.iconUrl]]];
-    Article *article = [[Article alloc] initWithTitle:articleMO.title iconUrl:iconURL icon:icon date:articleMO.date description:articleMO.articleDescr link:articleMO.articleLink images:[images mutableCopy] andVideoContent:[videoContent mutableCopy]];
+    //=======================================================================================================================//
+    NSMutableArray *imageURLs = [NSMutableArray array]; NSMutableArray *videoURLs = [NSMutableArray array];
+    [images enumerateObjectsUsingBlock:^(ImageContentURLAndNameMO *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [imageURLs addObject:[NSString stringWithFormat:@"%@",obj.imageUrl.copy]];
+    }];
+    [videoContent enumerateObjectsUsingBlock:^(VideoContentURLAndNameMO *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [videoURLs addObject:[NSString stringWithFormat:@"%@", obj.videoUrl.copy]];
+    }];
+    //=======================================================================================================================//
+    Article *article = [[Article alloc] initWithTitle:articleMO.title iconUrl:iconURL date:articleMO.date description:articleMO.articleDescr link:articleMO.articleLink images:imageURLs.mutableCopy];
     return article;
 }
 
 - (ArticleMO*)convertArticleInToMO:(Article*)article {
     ArticleMO *articleMO = [[ArticleMO alloc] initWithEntity:[NSEntityDescription entityForName:kArticleEnt inManagedObjectContext:self.context] insertIntoManagedObjectContext:self.context];
     NSArray *imageContent = [self getImageContentOfArticle:article];
-    NSArray *videoContent = [self getVideoContentOfArticle:article];
     
     
     articleMO.title = article.title;
@@ -218,7 +194,6 @@ static NSString *const kFreshNews = @"freshNews";
     articleMO.articleLink = article.articleLink.absoluteString;
     articleMO.articleDescr = article.articleDescr;
     articleMO.imageContentURLsAndNames = [NSSet setWithArray:imageContent];
-    articleMO.videoContentURLsAndNames = [NSSet setWithArray:videoContent];
     
     return articleMO;
 }
@@ -232,17 +207,6 @@ static NSString *const kFreshNews = @"freshNews";
         [imageContentArr addObject:imageContentMO];
     }
     return imageContentArr.copy;
-}
-
-- (NSArray<VideoContentURLAndNameMO *>*)getVideoContentOfArticle:(Article*)article {
-    NSMutableArray *videoContentArr = [NSMutableArray array];
-    for(int i = 0; i < article.videoContentURLsAndNames.count; i++) {
-        NSString *videoUrl = article.videoContentURLsAndNames[i];
-        VideoContentURLAndNameMO *videoContentMO = [[VideoContentURLAndNameMO alloc] initWithEntity:[NSEntityDescription entityForName:kVideoContentURLAndNameEnt inManagedObjectContext:self.context] insertIntoManagedObjectContext:self.context];
-        videoContentMO.videoUrl = videoUrl;
-        [videoContentArr addObject:videoContentMO];
-    }
-    return videoContentArr.copy;
 }
 
 - (NSUInteger) deleteAllObjects {

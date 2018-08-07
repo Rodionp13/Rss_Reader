@@ -24,7 +24,7 @@ static NSString *const kMediaTypeMp4 = @"mp4";
 
 @interface MyXMLParser() <NSXMLParserDelegate>
 @property(strong, nonatomic, readwrite) NSXMLParser *myXMLParser;
-@property(strong, nonatomic) NSMutableArray *articlesData;//test
+@property(strong, nonatomic) NSMutableArray *articlesData;
 
 @property(strong, nonatomic) NSArray *tags;
 @property(strong, nonatomic) NSMutableArray *arrOfImageContent;
@@ -56,7 +56,6 @@ static NSString *const kMediaTypeMp4 = @"mp4";
     self.foundValue = [[NSMutableString alloc] init];
     self.arrOfImageContent = [[NSMutableArray alloc] init];
     self.arrOfVideoContent = [[NSMutableArray alloc] init];
-    //    NSLog(@"parserDidStartDocument");
 }
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary<NSString *,NSString *> *)attributeDict {
@@ -77,7 +76,6 @@ static NSString *const kMediaTypeMp4 = @"mp4";
     }
     
     self.currentString = elementName;
-    //    NSLog(@"didStartElement ---> %@", elementName);
 }
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
@@ -87,7 +85,6 @@ static NSString *const kMediaTypeMp4 = @"mp4";
             [self.foundValue appendString:trimmingStr];
         }
     }
-    //    NSLog(@"foundCharacters ---> %@", string);
 }
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
@@ -101,7 +98,7 @@ static NSString *const kMediaTypeMp4 = @"mp4";
         [self.articlesData addObject:dictToAdd];
         //        [self.articles addObject:dictToAdd];
         
-        [self.tempDict removeAllObjects];//?????????????????!!!!!!!!!!!!!
+        [self.tempDict removeAllObjects];
         [self.arrOfImageContent removeAllObjects];
         [self.arrOfVideoContent removeAllObjects];
         self.inItem = NO;
@@ -114,22 +111,14 @@ static NSString *const kMediaTypeMp4 = @"mp4";
             }
         }
     }
-    //    NSLog(@"didEndElement ---> %@", elementName);
     [self.foundValue setString:@""];
 }
 
 - (void)parserDidEndDocument:(NSXMLParser *)parser {
     NSArray *arrToParse = [NSArray arrayWithArray:self.articlesData];
-//    [self.delegate parseFetchedDataIntoArticlesObjects:arrToParse];//Delegate of ArticleVC
     NSArray<Article*> *articlesObjects = [self parseArticlesDataIntoArticlesObjects:arrToParse withComplition:^(NSArray *myRes) {
         [self.delegate getArticlesDataAfterXMlParsing:myRes];
     }];
-    
-    //AppMAnager Delegate TEST
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        [self.delegate getArticlesDataAfterXMlParsing:articlesObjects];
-//    });
-//    NSArray *articlesObjects = [self parseArticlesDataIntoArticlesObjects:arrToPass tableView:self.tableView];
 //    self.articles = articlesObjects.mutableCopy;
     
     [self.articlesData removeAllObjects];

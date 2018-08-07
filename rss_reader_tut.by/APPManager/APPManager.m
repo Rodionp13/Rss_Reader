@@ -47,35 +47,32 @@ static NSString *const kDataBaseData = @"DataBaseData";
 }
 
 - (void)checkingForLoadingNews:(Article*)article complition:(void(^)(NSMutableArray*images))complitionBlock {
-    NSMutableArray *urls = [article imageContentURLsAndNames];
-    NSMutableArray *downloadedImages = [NSMutableArray array];
+    if([AppDelegate isNetworkAvailable]) {
+    NSMutableArray<NSString*> *urls = [article imageContentURLsAndNames];
+    NSMutableArray<NSURL*> *downloadedImages = [NSMutableArray array];
     __block int counter = 0;
-    for(ImageContentURLAndNameMO *imageMO in urls) {
-        NSString *strUrl = imageMO.imageUrl;
+    for(NSString *strUrl in urls) {
+        if(strUrl == nil) {NSLog(@"NIL");}
         NSURL *url = [NSURL URLWithString:strUrl];
         [Downloader downloadTaskWith:url handler:^(NSURL *destinationUrl) {
             [downloadedImages addObject:destinationUrl];
             counter += 1;
+            
+            if(counter == urls.count) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    complitionBlock(downloadedImages);
+                });
+            }
         }];
     }
-    if(counter == urls.count) {
-    complitionBlock(downloadedImages);
-    }
+    } else {[self.delegate userAlert];}
 }
 
 
 
 - (void)checkingForLoadingArticleContent:(NSURL*)urlForAllChannelsArticles {
     NSArray *sortedAtricles = [self prepareAndGetSortedArticlesDataFromDb:urlForAllChannelsArticles];
-    self.sortedArticles = sortedAtricles;//set for future use
-    NSLog(@"COUNT ARTICLES: %lu", sortedAtricles.count);
-//    for(ArticleMO*artMO in sortedAtricles) {
-//        NSLog(@"TITLE:%@", artMO.title);
-//        NSArray *images = [artMO.imageContentURLsAndNames allObjects];
-//        for(ImageContentURLAndNameMO *image in images) {
-//            NSLog(@"IMAGE:%@\n", image.imageUrl);
-//        }
-//    }
+    self.sortedArticles = sortedAtricles;
     if(sortedAtricles.count != 0) {
         [self.cdManager convertArticlesMOinToArticlesObjects:sortedAtricles withComplitionBlock:^(NSMutableArray<Article *> *articlesArr) {
             [self.delegate complitionLoadingArticlesData:articlesArr];
@@ -89,7 +86,7 @@ static NSString *const kDataBaseData = @"DataBaseData";
     } else {
         if([AppDelegate isNetworkAvailable]) {
             [self firstDownloadArticlesContent:urlForAllChannelsArticles];
-        } else {NSLog(@"NO CONNECTION AND NO DATA IN PERSISTENT STORE!");}
+        } else {[self.delegate userAlert];}
     }
 }
 
@@ -151,13 +148,11 @@ static NSString *const kDataBaseData = @"DataBaseData";
         for(int i = 0; i < downloadedArticles.count; i++) {
             Article *downloadedArticle = downloadedArticles[i];
             NSString *articleLinkDownloaded = downloadedArticle.articleLink.absoluteString;
-            NSLog(@"DLink:%@", articleLinkDownloaded);
             int countFlag = 0;
             
             for(int j = 0; j < convertedAtricles.count; j++) {
                 Article *convertedArticle = convertedAtricles[j];
                 NSString *articleLinkConverted = convertedArticle.articleLink.absoluteString;
-                NSLog(@"CLink:%@", articleLinkConverted);
                 BOOL isMatched = [articleLinkDownloaded isEqualToString:articleLinkConverted];
                 
                 if(isMatched == YES) {countFlag += 1; isMatched = NO; NSLog(@"YES");}
@@ -177,7 +172,6 @@ static NSString *const kDataBaseData = @"DataBaseData";
     NSURL *url = [NSURL URLWithString:kChannelsLink];
     NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:kChannelGroupAtr ascending:YES];
     NSArray *dataFromDB = [self.cdManager loadDataFromDBWithPredicate:nil andDescriptor:@[descriptor] forEntity:ChannelEnt];
-//    NSLog(@"%lu == dataFromDb,\n%@", dataFromDB.count, [[dataFromDB lastObject] valueForKey:@"name"]);
     
     if(dataFromDB.count > 0) {// core data.count != 0 && networkConnection isAvailable
         NSDictionary *validChannelObjects = [self.cdManager parseMOinToObjects:dataFromDB];
@@ -211,7 +205,7 @@ static NSString *const kDataBaseData = @"DataBaseData";
                 [strongSelf.cdManager addNewRecordsToDB:channelsAndHeaders];
                 });
               }];
-            }
+            } else {[self.delegate userAlert];}
     }
 }
 
@@ -238,7 +232,7 @@ static NSString *const kDataBaseData = @"DataBaseData";
             if(oldChannels.count > 1) {NSAssert(errno, @"there is more than one elem in Db %lu", oldChannels.count);}
             if(oldChannels.count == 0) {
                 [newChannelsToAddinDb addObject:channel];
-            } else {NSLog(@"CHANNEL is alraady in Db, %@", channel);}
+            }
         }
     }
     return newChannelsToAddinDb.copy;

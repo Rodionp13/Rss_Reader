@@ -13,6 +13,7 @@
 @optional
 - (void) complitionLoadingChannelsData:(NSDictionary *)channelsData;
 - (void) complitionLoadingArticlesData:(NSMutableArray *)articlesData;
+- (void) userAlert;
 @end
 
 
@@ -23,8 +24,3 @@
 - (void)checkingForLoadingArticleContent:(NSURL*)urlForAllChannelsArticles;
 - (void)checkingForLoadingNews:(Article*)article complition:(void(^)(NSMutableArray*images))complitionBlock;
 @end
-
-//@property(strong, nonatomic) id <APPManagerCoreDateDelegate> cdDelegate;
-//@protocol APPManagerCoreDateDelegate
-//- (NSDictionary *) parseMOinToObjects:(NSArray *)managedObjects;
-//@end

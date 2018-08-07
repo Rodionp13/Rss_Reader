@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Article.h"
 
 @interface RLDetailedArticleViewController : UIViewController
+@property(strong, nonatomic) Article *article;
 
 @end

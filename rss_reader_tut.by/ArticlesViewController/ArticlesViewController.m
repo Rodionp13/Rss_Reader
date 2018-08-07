@@ -7,7 +7,6 @@
 //
 
 #import "ArticlesViewController.h"
-#import "ArticlesViewController+Parsing_Methods.h"
 #import "CDManager.h"
 #import "MyXMLParser.h"
 
@@ -40,7 +39,6 @@ static NSString *const kMediaTypeMp4 = @"mp4";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     self.articles = [[NSMutableArray alloc] init];
     self.articlesData = [[NSMutableArray alloc] init];
     self.appManager = [[APPManager alloc] init];
@@ -57,13 +55,23 @@ static NSString *const kMediaTypeMp4 = @"mp4";
     [self setUpContraintsForTable];
 }
 
-//App manager delegate TEST
+
+#pragma mark - APPManager delegate method(download complition)
+
 - (void)complitionLoadingArticlesData:(NSMutableArray *)articlesData {
     self.articles = articlesData;
-//    [self.tableView reloadData];
+    [self.tableView reloadData];
 }
 - (void)updateTable {
     [self.tableView reloadData];
+}
+
+- (void)userAlert {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Wait" message:@"There'is no internet connection and no data in store!!!" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"Okey" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    }];
+    [alert addAction:action];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 #pragma mark - methods for table view
@@ -93,6 +101,8 @@ static NSString *const kMediaTypeMp4 = @"mp4";
     RLDetailedArticleViewController *detailedVC = [[RLDetailedArticleViewController alloc] init];
     detailedVC.article = article;
     [self.navigationController pushViewController:detailedVC animated:YES];
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (void)setUpContraintsForTable {

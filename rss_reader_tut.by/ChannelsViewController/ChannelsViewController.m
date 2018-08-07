@@ -22,7 +22,6 @@ static NSString *const kChannelsLink = @"https://news.tut.by/rss.html";
 @property(strong, nonatomic) NSMutableArray *headers;
 @property(strong, nonatomic) NSMutableArray *channels;
 @property(strong, nonatomic) NSMutableArray *freshNewsForAllArticles;
-//@property(strong, nonatomic) HTMLParser *parser;
 @property(strong, nonatomic) APPManager *appManager;
 
 @property(strong, nonatomic) NSURL *destinationURL;
@@ -59,6 +58,8 @@ static NSString *const kChannelsLink = @"https://news.tut.by/rss.html";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.navigationItem.title = @"RSS - reader";
+    
     self.appManager = [[APPManager alloc] init];
     self.appManager.delegate = self;
     [self.appManager checkingForLoadingChennelContent];
@@ -69,8 +70,6 @@ static NSString *const kChannelsLink = @"https://news.tut.by/rss.html";
     [self.myTable registerClass:[FirstCell class] forCellReuseIdentifier:kCellId];
     [self.view addSubview:self.myTable];
     [self setUpContraintsForTable];
-    
-    self.navigationItem.title = @"RSS - reader";
 }
 
 #pragma mark - APPManager delegate method(download complition)
@@ -82,7 +81,17 @@ static NSString *const kChannelsLink = @"https://news.tut.by/rss.html";
     [self.myTable reloadData];
 }
 
+- (void)userAlert {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Wait" message:@"There'is no internet connection and no data in store!!!\nPlease switch on connection and reload App" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"Okey" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    }];
+    [alert addAction:action];
+    [self presentViewController:alert animated:YES completion:^{
+        NSLog(@"OKEY");
+    }];
+}
 
+#pragma mark - TableView methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return self.headers.count;
@@ -135,6 +144,10 @@ static NSString *const kChannelsLink = @"https://news.tut.by/rss.html";
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
         return self.view.frame.size.height / 20;
 }
+
+
+
+#pragma mark - constraints
 
 - (void)setUpContraintsForTable {
     [self.myTable setTranslatesAutoresizingMaskIntoConstraints:NO];
